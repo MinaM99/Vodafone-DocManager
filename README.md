@@ -1,6 +1,22 @@
 # Vodafone-DocManager
 
-This README provides instructions for setting up, running, and deploying the **Vodafone-DocManager** React application.
+Thi## About the Project
+
+The **Vodafone-DocManager** is an integration between Vodafone and Documentum, designed with two primary functionalities:
+
+1. **Document Statistics**:
+
+   - Displays comprehensive statistics on documents processed by Documentum.
+   - Tracks successful and failed document processing, providing insights into operational performance.
+
+2. **Records Archiving**:
+
+   - Facilitates the archiving of physical documents.
+   - Uses QR code scanning to input details such as box number, MSISDN, and document type.
+   - Checks for the existence of a corresponding digital document in the system.
+   - Creates and links a physical document to the identified digital document for efficient record management. README provides instructions for setting up, running, and deploying the **Vodafone-DocManager** React application.
+
+
 
 ## Prerequisites
 
