@@ -1,0 +1,151 @@
+/* Navbar */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000; /* Ensure navbar stays on top */
+  background-color: #fff; /* Example background color */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
+/* Push content below navbar */
+.records-container {
+  margin-top: 60px; /* Adjust this depending on the height of your navbar */
+  padding: 20px;
+}
+
+/* Input Panel */
+.input-panel {
+  margin-bottom: 20px;
+}
+
+.input-panel div {
+  margin-bottom: 15px;
+}
+
+.input-panel label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #333;
+  font-size: 14px;
+}
+
+/* Input Fields */
+.input-panel input,
+.input-panel select {
+  padding: 12px;
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  outline: none;
+  font-size: 14px;
+  color: #333;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+.input-panel input:focus {
+  box-shadow: 0 0 5px rgba(230, 0, 0, 0.8);
+  border-color: #e60000;
+}
+
+/* Button Group */
+.input-panel .button-group {
+  display: flex;
+  justify-content: space-between; /* Distribute buttons evenly */
+  width: 100%;
+  max-width: 400px;
+  gap: 10px;
+  margin: 0 auto; /* Center button group */
+}
+
+/* Buttons */
+.input-panel button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 20px;
+  background-color: #e60000;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.input-panel button:hover {
+  background-color: #b80000;
+  transform: scale(1.02);
+}
+
+.input-panel .reset-button {
+  background-color: #999;
+}
+
+.input-panel .reset-button:hover {
+  background-color: #666;
+}
+
+/* Status Panel */
+.status-panel {
+  margin-top: 20px;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for the panel */
+}
+
+.status-panel table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.status-panel th,
+.status-panel td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.status-panel th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+  color: #333;
+}
+/* Success and Error Status Row Colors */
+.success-row {
+  background-color: #d4edda; /* Light Green */
+  color: #155724; /* Dark Green Text */
+}
+
+.error-row {
+  background-color: #f8d7da; /* Light Red */
+  color: #721c24; /* Dark Red Text */
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .input-panel input,
+  .input-panel select,
+  .button-group {
+    max-width: 100%;
+  }
+
+  .input-panel .button-group {
+    flex-direction: column;
+  }
+
+  .input-panel button {
+    margin-bottom: 10px; /* Add spacing between buttons */
+  }
+
+  .status-panel table th,
+  .status-panel table td {
+    font-size: 12px;
+  }
+}

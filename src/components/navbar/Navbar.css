@@ -1,0 +1,140 @@
+/* Navbar.css */
+* {
+  box-sizing: border-box; /* Include padding and border in element's total width and height */
+}
+
+body {
+  margin: 0; /* Remove default body margin */
+  padding: 0; /* Remove default body padding */
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Keeps the left and right sections spaced out */
+  background-color: white;
+  padding: 10px 20px; /* Add padding to the left and right */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  position: fixed; /* Keep it fixed at the top */
+  top: 0; /* Stick to the top */
+  z-index: 1000; /* Ensure it stays above other content */
+  width: 100%; /* Ensure the navbar takes full width */
+  left: 0; /* Ensure it starts from the left */
+}
+
+.navbar-center {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centers the items horizontally */
+  flex-grow: 1; /* Allows the navbar center to grow and take the available space */
+}
+
+.vodafone-logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centers both logo and text together */
+}
+
+.vodafone-icon {
+  width: 50px; /* Decrease the size to make it smaller */
+  height: auto;
+  background-color: transparent; /* Set background to transparent */
+}
+
+.vodafone-link-text {
+  font-size: 36px; /* Increase the font size */
+  font-weight: bold;
+  color: #E60000; /* Vodafone red color */
+  text-decoration: none; /* Remove underline */
+  margin-left: 5px; /* Adjust spacing between the logo and text */
+  text-align: center;
+}
+
+.vodafone-link-text:hover {
+  color: #C70000; /* Darker red on hover */
+}
+
+.logout-container {
+  position: absolute; /* Position it absolutely so it doesn't take up space in flexbox */
+  right: 20px; /* Adjust position from the right */
+  display: flex;
+  align-items: center;
+}
+
+.logout-icon {
+  width: 50px; /* Keep the size as needed */
+  height: auto;
+  cursor: pointer; /* Change cursor to pointer */
+  background-color: transparent; /* Set background to transparent */
+  margin-left: 10px; /* Add margin to the left */
+}
+
+.logout-popup {
+  position: absolute;
+  right: 0; /* Align to the right */
+  top: 100%; /* Position below the icon */
+  background-color: rgba(255, 255, 255, 0.8); /* White with slight transparency */
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Slightly larger shadow for depth */
+  padding: 15px; /* Add more padding for better spacing */
+  z-index: 1000; /* Ensure it stays above other content */
+  border-radius: 8px; /* Curved edges */
+  backdrop-filter: blur(5px); /* Optional: add a blur effect to the background */
+  width: 300px; /* Set the width of the popup */
+  display: flex; /* Use flexbox for layout */
+  flex-direction: column; /* Stack children vertically */
+  gap: 10px; /* Space between buttons */
+}
+
+.logout-popup p {
+  margin: 10px 0; /* Add space above and below the text */
+  font-size: 16px; /* Increase font size for better readability */
+  line-height: 1.5; /* Relaxed line height for better spacing */
+}
+
+.logout-popup button {
+  width: 100%; /* Make buttons stretch to full width */
+  padding: 10px; /* Add padding for better button size */
+  border: none; /* Remove default border */
+  border-radius: 4px; /* Curved edges for buttons */
+  cursor: pointer; /* Change cursor to pointer */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.logout-popup .logout-yes-button {
+  background-color: #E60000; /* Vodafone red color */
+  color: white; /* White text color */
+}
+
+.logout-popup .logout-yes-button:hover {
+  background-color: #C70000; /* Darker red on hover */
+}
+
+.logout-popup .logout-no-button {
+  background-color: #f0f0f0; /* Light gray for the "No" button */
+  color: black; /* Black text color */
+}
+
+.logout-popup .logout-no-button:hover {
+  background-color: #e0e0e0; /* Darker gray on hover */
+}
+
+/* Media Queries: */
+@media screen and (max-width: 768px) {
+  .vodafone-link-text {
+    display: none; /* Hide the Vodafone title */
+  }
+
+  .vodafone-icon {
+    width: 40px; /* Slightly smaller logo for smaller screens */
+  }
+
+  .navbar-center {
+    justify-content: space-between; /* Adjust navbar items to be spaced out */
+  }
+
+  .logout-container {
+    position: absolute; /* Ensure logout stays on the right */
+    right: 20px; /* Right side positioning */
+  }
+}
