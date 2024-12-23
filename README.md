@@ -1,4 +1,4 @@
-# Vodafone-DocManager
+# Vodafone Documentum Documents Manager
 
 ## About the Project
 
