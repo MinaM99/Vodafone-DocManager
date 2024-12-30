@@ -1,70 +1,121 @@
-# Getting Started with Create React App
+# Vodafone Documentum Documents Manager
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## About the Project
 
-## Available Scripts
+The **Vodafone-DocManager** is an integration between Vodafone and Documentum, designed with two primary functionalities:
 
-In the project directory, you can run:
+1. **Document Statistics**:
 
-### `npm start`
+   - Displays comprehensive statistics on documents processed by Documentum.
+   - Tracks successful and failed document processing, providing insights into operational performance.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+2. **Records Archiving**:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+   - Facilitates the archiving of physical documents.
+   - Uses QR code scanning to input details such as box number, MSISDN, and document type.
+   - Checks for the existence of a corresponding digital document in the system.
+   - Creates and links a physical document to the identified digital document for efficient record management.
 
-### `npm test`
+This README provides instructions for setting up, running, and deploying the **Vodafone-DocManager** React application.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Prerequisites
 
-### `npm run build`
+- Node.js installed on your system
+- Tomcat server installed and running
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Steps to Run and Deploy the Application
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 1. Install Dependencies
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+First, ensure you have the required dependencies for the React app installed. Run the following command in the root directory of the project:
 
-### `npm run eject`
+```bash
+npm install
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### 2. Start the Development Server
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+To start the app in development mode, use the command:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+npm start
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+This will run the app locally. You can access it in your browser at:
 
-## Learn More
+```
+http://localhost:3000
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### 3. Build the App for Production
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+To deploy the app, create a production build by running:
 
-### Code Splitting
+```bash
+npm run build
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+This will generate the production-ready files in a `build` directory in the project root.
 
-### Analyzing the Bundle Size
+### 4. Deploy to Tomcat
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+To deploy the app on a Tomcat server:
 
-### Making a Progressive Web App
+1. Navigate to your Tomcat's `webapps` directory.
+2. Create a new folder named `Vodafone-DocManager`:
+   ```
+   <TOMCAT_HOME>/webapps/Vodafone-DocManager
+   ```
+3. Copy the contents of the `build` folder from your React app into this new folder:
+   ```
+   cp -r build/* <TOMCAT_HOME>/webapps/Vodafone-DocManager
+   ```
+4. **Add `WEB-INF` and `web.xml` Configuration**:
+   
+   - Inside the `Vodafone-DocManager` folder, create a new directory called `WEB-INF`.
+   - In the `WEB-INF` directory, create a file named `web.xml` and add the following content:
+     
+     ```xml
+     <web-app xmlns="http://java.sun.com/xml/ns/javaee" version="3.0">
+         <welcome-file-list>
+             <welcome-file>index.html</welcome-file>
+         </welcome-file-list>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+         <error-page>
+             <error-code>404</error-code>
+             <location>/index.html</location>
+         </error-page>
+     </web-app>
+     ```
 
-### Advanced Configuration
+   This step is necessary to handle client-side routing correctly in a React application. When using React Router, refreshing or directly accessing a route (e.g., `/login`) can result in a `404 Not Found` error because the Tomcat server tries to resolve the route itself instead of serving `index.html`. The `web.xml` configuration ensures that any unrecognized route will fallback to `index.html`, allowing React Router to handle the routing.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+5. Restart the Tomcat server to apply the changes.
 
-### Deployment
+### 5. Access the App on Tomcat
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Once the files are copied and the Tomcat server is running, access the app in your browser at:
 
-### `npm run build` fails to minify
+```
+http://localhost:<TOMCAT_PORT>/Vodafone-DocManager
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Replace `<TOMCAT_PORT>` with the port number where your Tomcat server is running (default is usually `8080`).
+
+---
+
+## Notes
+
+- Configuration of Documentum port and repository name is located in the `src/data/config.json` file.
+- Ensure that the Tomcat server is properly configured to serve static files.
+- If you encounter any issues, check the Tomcat logs for errors.
+- For customization or additional configurations, modify the `build` process or adjust the Tomcat settings accordingly.
+
+## Troubleshooting
+
+If the app doesn't load as expected:
+
+- Ensure that the `npm run build` command was successful and all files were generated in the `build` folder.
+- Check the permissions of the `Vodafone-DocManager` folder in the Tomcat `webapps` directory.
+- Verify that the Tomcat server is running and accessible.
+
