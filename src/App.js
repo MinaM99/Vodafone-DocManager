@@ -53,7 +53,7 @@ const App = () => {
         const response = await fetch(currentUserURL, {
           method: "GET",
           headers: { DCTMClientToken: clientToken },
-          credentials: "include",
+          //credentials: "include",
         });
   
         if (response.ok) {

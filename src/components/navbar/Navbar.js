@@ -23,7 +23,7 @@ const Navbar = ({ username }) => {
       const response = await fetch(logoutUrl, {
         method: "GET",
         headers: headers,
-        credentials: "include", // Include cookies with the request
+       // credentials: "include", // Include cookies with the request
       });
 
       if (response.ok) {

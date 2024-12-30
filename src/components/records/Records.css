@@ -46,7 +46,6 @@
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-
 .input-panel input:focus {
   box-shadow: 0 0 5px rgba(230, 0, 0, 0.8);
   border-color: #e60000;
@@ -96,12 +95,15 @@
   border-radius: 10px;
   background-color: #f9f9f9;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for the panel */
+  overflow-x: auto; /* Enable horizontal scrolling for the table */
 }
 
 .status-panel table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
+  table-layout: auto; /* Allow flexible column widths */
+  overflow-x: auto; /* Ensure scrollability within the panel */
 }
 
 .status-panel th,
@@ -110,6 +112,7 @@
   padding: 10px;
   text-align: left;
   font-size: 14px;
+  word-wrap: break-word; /* Break long words to prevent overflow */
 }
 
 .status-panel th {
@@ -117,6 +120,7 @@
   font-weight: bold;
   color: #333;
 }
+
 /* Success and Error Status Row Colors */
 .success-row {
   background-color: #d4edda; /* Light Green */
@@ -127,7 +131,6 @@
   background-color: #f8d7da; /* Light Red */
   color: #721c24; /* Dark Red Text */
 }
-
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .input-panel input,
@@ -144,8 +147,30 @@
     margin-bottom: 10px; /* Add spacing between buttons */
   }
 
-  .status-panel table th,
-  .status-panel table td {
-    font-size: 12px;
+  .status-panel {
+    overflow-x: auto; /* Ensure horizontal scrolling works */
+    white-space: nowrap; /* Prevent content wrapping in smaller screens */
+  }
+
+  .status-panel table {
+    border-collapse: collapse; /* Remove gaps between table cells */
+    margin-right: 0 !important; /*
+  }
+
+  .status-panel th,
+  .status-panel td {
+    font-size: 12px; /* Adjust font size for smaller screens */
+    padding: 8px; /* Reduce padding for compact display */
+    text-align: left; /* Align text to the left for better readability */
+  }
+
+  /* Add this to ensure the table aligns properly within its container */
+  .status-panel table,
+  .status-panel {
+    display: block; /* Allow block-level behavior for scrolling */
+  }
+  
+  .status-panel table {
+    min-width: 100%; /* Ensure table fills parent container */
   }
 }

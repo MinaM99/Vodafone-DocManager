@@ -22,7 +22,7 @@ const LoginPage = ({ onLogin }) => {
           'Authorization': `Basic ${btoa(`${username}:${password}`)}`, // Base64 encode credentials
           'DOCUMENTUM-CUSTOM-UNAUTH-SCHEME': true, // Ensure string value
         },
-        credentials: 'include', // Include cookies in the request
+        //credentials: 'include', // Include cookies in the request
       });
 
       if (!response.ok) {
@@ -53,7 +53,7 @@ const LoginPage = ({ onLogin }) => {
         headers: {
           'DCTMClientToken': token, // Use the token here
         },
-        credentials: 'include',
+        //credentials: 'include',
       });
 
       if (!currentUserResponse.ok) {
@@ -73,7 +73,7 @@ const LoginPage = ({ onLogin }) => {
         headers: {
           'DCTMClientToken': token, // Use the token here
         },
-        credentials: 'include',
+        //credentials: 'include',
       });
 
       if (!currentUserGroupResponse.ok) {

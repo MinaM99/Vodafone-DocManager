@@ -23,27 +23,37 @@ const Records = ({ username }) => {
         const response = await fetch(dqlUrl, {
           method: "POST", // Use POST method
           headers: {
-            DCTMClientToken : clientToken, // Indicate that we're sending JSON
+            DCTMClientToken: clientToken, // Indicate that we're sending JSON
           },
-          credentials: "include", // Include cookies with the request
+          //credentials: "include", // Include cookies with the request
           body: JSON.stringify(dqlQuery), // Pass the dql query in the body
         });
-
+  
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-
+  
         const data = await response.json();
-        const types = data.entries.map(entry => entry.title); // Extract titles (document types)
-        setDocumentTypes(types); // Set document types state
+        const allTypes = data.entries.map((entry) => entry.title); // Extract titles (document types)
+  
+        // Filter for specific document types
+        const desiredTypes = [
+          "voda_cash_contract",
+          "voda_phys_base_document",
+          "voda_post_paid_contract",
+          "voda_pre_paid_contract",
+        ];
+        const filteredTypes = allTypes.filter((type) => desiredTypes.includes(type));
+  
+        setDocumentTypes(filteredTypes); // Set document types state
       } catch (error) {
         console.error("Error fetching document types:", error);
       }
     };
-
+  
     fetchDocumentTypes();
   }, [config.documentumUrl, config.repositoryName]); // Re-run if config changes
-
+  
   
   const handleSubmit = async () => {
     // Check if any of the input fields are empty
@@ -51,47 +61,72 @@ const Records = ({ username }) => {
       alert("Please fill in all fields.");
       return; // Prevent submitting if any field is empty
     }
-
-    // Simulate the response with a 200 HTTP status for success or a different code for error
-    const simulatedSuccessResponse = {
-      status: 200, // HTTP status code 200 for success
-      response: {
-        properties: {
-          cch_status: "ARCHIVED", // Status to display in the table
-          cch_comments: "Document is archived", // Additional comment
-        },
-      },
-      message: "Document processed successfully.",
-    };
-
-    const simulatedErrorResponse = {
-      status: 400, // HTTP status code 400 for error (example)
-      message: "No Box Number exists.",
-    };
-
-    // Simulate API behavior
-    let simulatedResponse;
-    if (boxNumber === "123456") {
-      simulatedResponse = simulatedSuccessResponse;
-    } else {
-      simulatedResponse = simulatedErrorResponse;
-    }
-
-    // Determine the status based on the HTTP response status code
-    const statusClass = simulatedResponse.status === 200 ? "success-row" : "error-row";
-
-    // Process the response and append to the existing statusData
-    const newStatus = {
-      msisdn: msisdn,
+  
+    // Construct the request body
+    const requestBody = {
+      customerId: msisdn,
       documentType: documentType,
-      status: simulatedResponse.status === 200 ? simulatedResponse.response.properties.cch_status : "Error",
-      description: simulatedResponse.status === 200 ? simulatedResponse.response.properties.cch_comments : simulatedResponse.message,
-      statusClass, // Add class for status row color
+      boxNumber: boxNumber,
     };
-
-    // Add the new status to the existing list (without erasing the old ones)
-    setStatusData((prevStatusData) => [...prevStatusData, newStatus]);
+  
+    try {
+      // Send the POST request
+      const response = await fetch("http://10.0.40.26:8080/vodafone/archive", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          DCTMClientToken : clientToken,
+        },
+        //credentials: "include", // Include cookies with the request
+        body: JSON.stringify(requestBody),
+      });
+  
+      // Parse the response
+      const data = await response.json();
+  
+      // Determine the response status and description
+      let statusClass;
+      let status;
+      let description;
+  
+      if (response.ok) {
+        // Success case (HTTP 200)
+        statusClass = "success-row";
+        status = "Succeeded";
+        description = data.Succeeded || "Archived successfully.";
+      } else {
+        // Error case (e.g., HTTP 404)
+        statusClass = "error-row";
+        status = "Failed";
+        description = data.Error || "An error occurred.";
+      }
+  
+      // Add the response data to the status table
+      const newStatus = {
+        msisdn: msisdn,
+        documentType: documentType,
+        status: status,
+        description: description,
+        statusClass,
+      };
+  
+      // Add the new status to the existing list
+      setStatusData((prevStatusData) => [...prevStatusData, newStatus]);
+    } catch (error) {
+      console.error("Error sending POST request:", error);
+      // Handle network or unexpected errors
+      const newStatus = {
+        msisdn: msisdn,
+        documentType: documentType,
+        status: "Error",
+        description: "Network error or unexpected issue occurred.",
+        statusClass: "error-row",
+      };
+      setStatusData((prevStatusData) => [...prevStatusData, newStatus]);
+    }
   };
+  
+  
 
   // Reset function to clear input fields and status data
   const handleReset = () => {
