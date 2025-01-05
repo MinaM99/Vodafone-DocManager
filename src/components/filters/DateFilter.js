@@ -1,50 +1,47 @@
-import React, { useState, useEffect } from 'react';
-import './DateFilter.css';
+import React, { useState } from "react";
+import "./DateFilter.css";
 
-const DateFilter = ({ data, onFilterData }) => {
+const DateFilter = ({ onDateRangeChange }) => {
   const today = new Date();
-  const formattedToday = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+  
+  // Helper function to format dates as DD-MM-YYYY
+  const formatDate = (date) => {
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+
+  const formattedToday = formatDate(today);
   const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-  const formattedFirstDay = firstDayOfMonth.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+  const formattedFirstDay = formatDate(firstDayOfMonth);
 
   // Local state for date range
   const [startDate, setStartDate] = useState(formattedFirstDay);
   const [endDate, setEndDate] = useState(formattedToday);
 
-  useEffect(() => {
-    // Perform default filtering for the initial date range
-    filterData(formattedFirstDay, formattedToday);
-  }, []); // Only runs on component mount
-
   const handleStartDateChange = (e) => {
-    setStartDate(e.target.value);
+    const dateParts = e.target.value.split("-"); // Format: YYYY-MM-DD
+    const formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`; // Convert to DD-MM-YYYY
+    setStartDate(formattedDate);
   };
 
   const handleEndDateChange = (e) => {
-    setEndDate(e.target.value);
-  };
-
-  const filterData = (start, end) => {
-    const selectedStartDate = new Date(start);
-    const selectedEndDate = new Date(end);
-
-    const filtered = Object.keys(data).reduce((acc, key) => {
-      const date = new Date(key.split('-').reverse().join('-'));
-      if (date >= selectedStartDate && date <= selectedEndDate) {
-        acc[key] = data[key];
-      }
-      return acc;
-    }, {});
-
-    onFilterData(filtered); // Pass filtered data to parent
+    const dateParts = e.target.value.split("-"); // Format: YYYY-MM-DD
+    const formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`; // Convert to DD-MM-YYYY
+    setEndDate(formattedDate);
   };
 
   const handleFilterClick = () => {
-    if (new Date(startDate) > new Date(endDate)) {
+    const startDateParts = startDate.split("-").reverse().join("-");
+    const endDateParts = endDate.split("-").reverse().join("-");
+
+    if (new Date(startDateParts) > new Date(endDateParts)) {
       alert("Start date cannot exceed end date.");
       return;
     }
-    filterData(startDate, endDate);
+    // Trigger the parent function to fetch data
+    onDateRangeChange(startDate, endDate);
   };
 
   return (
@@ -54,17 +51,17 @@ const DateFilter = ({ data, onFilterData }) => {
         <input
           id="start-date"
           type="date"
-          value={startDate}
+          value={startDate.split("-").reverse().join("-")} // Convert DD-MM-YYYY to YYYY-MM-DD for input
           onChange={handleStartDateChange}
-          max={formattedToday}
+          max={formattedToday.split("-").reverse().join("-")} // Convert DD-MM-YYYY to YYYY-MM-DD for input
         />
         <label htmlFor="end-date">End Date:</label>
         <input
           id="end-date"
           type="date"
-          value={endDate}
+          value={endDate.split("-").reverse().join("-")} // Convert DD-MM-YYYY to YYYY-MM-DD for input
           onChange={handleEndDateChange}
-          max={formattedToday}
+          max={formattedToday.split("-").reverse().join("-")} // Convert DD-MM-YYYY to YYYY-MM-DD for input
         />
       </div>
       <button onClick={handleFilterClick}>Filter</button>

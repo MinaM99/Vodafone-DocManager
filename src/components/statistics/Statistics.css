@@ -1,0 +1,105 @@
+.statistics-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    margin-top: 60px; /* Add space to push the content below the navbar */
+}
+
+/* Ensure the header is visible */
+.statistics-container h1 {
+    margin: 0;
+    padding: 0;
+}
+
+.charts {
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping; ensure charts stay side-by-side */
+    gap: 90px; /* Space between charts */
+    width: 100%; /* Ensure the charts container takes full width */
+    justify-content: center; /* Center the charts horizontally */
+    margin-top: 20px; /* Ensure spacing between charts and the filter */
+}
+
+.chart {
+    width: 30%; /* Left chart (PieChart) takes 30% of the container width */
+    height: auto; /* Allow height to adjust dynamically */
+    max-height: 400px; /* Optional: Set a max height */
+    display: flex;
+    justify-content: center; /* Center chart inside its container */
+    align-items: center; /* Vertically center content */
+    box-sizing: border-box; /* Prevent padding from affecting size */
+    overflow: visible; /* Ensure no cropping occurs */
+}
+
+.chart-left {
+    flex: 0.3; /* Left chart (BarChart) takes 30% of the width */
+    min-width: 200px; /* Ensure it doesn't shrink too much */
+    max-width: 400px; /* Optional: limit maximum width */
+}
+
+.chart-right {
+    flex: 0.7; /* Right chart (PieChart) takes 70% of the width */
+    min-width: 300px; /* Ensure it doesn't shrink too much */
+    max-width: 800px; /* Optional: limit maximum width */
+}
+
+.chart canvas {
+    width: 100% !important; /* Ensure the canvas inside chart stretches to fit */
+    height: 100% !important; /* Ensure the canvas height stretches to fit */
+    max-width: 100% !important; /* Ensure the canvas does not exceed chart container */
+    max-height: 100% !important; /* Ensure the canvas does not exceed chart container */
+}
+
+/* Ensure Date Filter spans full width */
+.date-filter {
+    margin-bottom: 20px;
+    width: 100%; /* Ensure it spans the full width */
+    display: flex;
+    justify-content: center; /* Ensure filter is centered */
+    margin-top: 20px; /* Space between filter and charts */
+}
+
+/* No Data Indicator styling */
+.no-data-indicator {
+    margin: 20px;
+    padding: 10px;
+    background-color: #f8d7da; /* Light red background */
+    color: #721c24; /* Dark red text */
+    border: 1px solid #f5c6cb; /* Border color */
+    border-radius: 5px;
+    width: 100%; /* Ensure full-width appearance */
+    text-align: center;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+    .charts {
+        flex-direction: column; /* Stack charts vertically */
+        align-items: center; /* Center charts horizontally */
+        width: 100%; /* Ensure the charts take full width on smaller screens */
+        margin-top: 20px; /* Add space between filter and charts */
+        gap: 20px; /* Space between stacked charts */
+    }
+
+    .chart-left,
+    .chart-right {
+        width: 90%; /* Make each chart take 90% of the available width on small screens */
+        height: 250px; /* Adjust height to prevent overflow */
+    }
+
+    .date-filter {
+        width: 90%; /* Ensure the filter takes 90% of the width */
+        text-align: center; /* Center the filter */
+        margin-top: 20px; /* Add space between filter and charts */
+    }
+
+    /* Ensure content is centered in the viewport */
+    .statistics-container {
+        justify-content: center; /* Center the container content */
+        height: auto; /* Allow the container to auto-adjust height */
+        padding: 0 10px; /* Add some padding to avoid content touching the edges */
+    }
+}

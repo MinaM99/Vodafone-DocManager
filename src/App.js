@@ -9,57 +9,39 @@ import LoginPage from "./components/login/LoginPage";
 import Statistics from "./components/statistics/Statistics";
 import Records from "./components/records/Records";
 import Navbar from "./components/navbar/Navbar";
-import jsonData from "./data/data.json";
 import "./App.css";
 import config from "./data/config.json";
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isTokenChecked, setIsTokenChecked] = useState(false);
-  const [username, setUsername] = useState("");
-  const [userGroup, setUserGroup] = useState("");
-  const [data, setData] = useState({});
-  const [filteredData, setFilteredData] = useState({});
-  const [noDataFound, setNoDataFound] = useState(false);
-  const clientToken = sessionStorage.getItem("dctmclientToken");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);  // Track login state
+  const [isTokenChecked, setIsTokenChecked] = useState(false);  // Check if token validation is done
+  const [username, setUsername] = useState("");  // Store logged-in user's username
+  const [userGroup, setUserGroup] = useState("");  // Store the user group
+  const clientToken = sessionStorage.getItem("dctmclientToken");  // Retrieve token from session storage
 
-  const currentUserURL = `${config.documentumUrl}/dctm-rest/repositories/${config.repositoryName}/currentuser`;
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setData(jsonData);
-        setFilteredData(jsonData);
-      } catch (error) {
-        console.error("Error loading JSON data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
+  const currentUserURL = `${config.documentumUrl}/dctm-rest/repositories/${config.repositoryName}/currentuser`;  // URL for current user data
 
   useEffect(() => {
     const checkToken = async () => {
       const storedUserGroup = sessionStorage.getItem("userGroup");
-      const storedIsLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
-  
+      const storedIsLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";  // Check if user is logged in
+
       if (!clientToken || !storedIsLoggedIn) {
         setIsLoggedIn(false);
         setIsTokenChecked(true);
         return;
       }
-  
+
       try {
         const response = await fetch(currentUserURL, {
           method: "GET",
-          headers: { DCTMClientToken: clientToken },
-          //credentials: "include",
+          headers: { DCTMClientToken: clientToken },  // Pass token for authentication
         });
-  
+
         if (response.ok) {
           const userData = await response.json();
-          setUsername(userData.properties.user_name || "Success");
-          setUserGroup(storedUserGroup || userData.properties.user_group);
+          setUsername(userData.properties.user_name || "Success");  // Set username
+          setUserGroup(storedUserGroup || userData.properties.user_group);  // Set user group
           setIsLoggedIn(true);
         } else {
           console.error("Invalid token, redirecting...");
@@ -77,34 +59,27 @@ const App = () => {
       }
       setIsTokenChecked(true);
     };
-  
+
     checkToken();
   }, [clientToken, currentUserURL]);
-  
+
   const handleLogin = (token, userGroup) => {
     setUserGroup(userGroup);
     setIsLoggedIn(true);
-    sessionStorage.setItem("dctmclientToken", token);
-    sessionStorage.setItem("userGroup", userGroup);
-    sessionStorage.setItem("isLoggedIn", "true");
-  };
-  
-
-  const handleFilterData = (filtered) => {
-    setFilteredData(filtered);
-    setNoDataFound(Object.keys(filtered).length === 0);
+    sessionStorage.setItem("dctmclientToken", token);  // Store token
+    sessionStorage.setItem("userGroup", userGroup);  // Store user group
+    sessionStorage.setItem("isLoggedIn", "true");  // Mark as logged in
   };
 
   if (!isTokenChecked) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>;  // Show loading until token validation is done
   }
 
   return (
     <Router>
-      <div className={`app ${isLoggedIn ? "logged-in" : "login-page"}`}>
-        {isLoggedIn && <Navbar username={username} />}
+      <div className={`app ${isLoggedIn ? "logged-in" : "login-page"}`}> 
+        {isLoggedIn && <Navbar username={username} />}   
         <Routes>
-          {/* Login Route */}
           <Route
             path="/Vodafone-DocManager/login"
             element={
@@ -115,7 +90,7 @@ const App = () => {
                       ? "/Vodafone-DocManager/statistics"
                       : userGroup === "vf_records_users"
                       ? "/Vodafone-DocManager/records"
-                      : "/Vodafone-DocManager/login" // Fallback if userGroup is neither
+                      : "/Vodafone-DocManager/login"  // Fallback route
                   }
                 />
               ) : (
@@ -129,13 +104,7 @@ const App = () => {
             path="/Vodafone-DocManager/statistics"
             element={
               isLoggedIn && userGroup === "vf_stats_users" ? (
-                <Statistics
-                  username={username}
-                  data={data}
-                  filteredData={filteredData}
-                  noDataFound={noDataFound}
-                  onFilterData={handleFilterData}
-                />
+                <Statistics username={username} userGroup={userGroup} />  // Pass username and userGroup to Statistics
               ) : (
                 <Navigate to="/Vodafone-DocManager/login" />
               )
@@ -147,7 +116,7 @@ const App = () => {
             path="/Vodafone-DocManager/records/*"
             element={
               isLoggedIn && userGroup === "vf_records_users" ? (
-                <Records username={username} />
+                <Records username={username} />  // Pass username to Records
               ) : (
                 <Navigate to="/Vodafone-DocManager/login" />
               )
@@ -165,7 +134,7 @@ const App = () => {
                       ? "/Vodafone-DocManager/statistics"
                       : userGroup === "vf_records_users"
                       ? "/Vodafone-DocManager/records"
-                      : "/Vodafone-DocManager/login" // Fallback if userGroup is neither
+                      : "/Vodafone-DocManager/login"  // Fallback if userGroup is neither
                   }
                 />
               ) : (
