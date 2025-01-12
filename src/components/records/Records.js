@@ -39,10 +39,10 @@ const Records = ({ username }) => {
         // Filter for specific document types
         const desiredTypes = [
           "voda_cash_contract",
-          "voda_phys_base_document",
           "voda_post_paid_contract",
           "voda_pre_paid_contract",
           "voda_corporate_contract",
+          "voda_adsl_contract",
         ];
         const filteredTypes = allTypes.filter((type) => desiredTypes.includes(type));
   
@@ -99,7 +99,7 @@ const Records = ({ username }) => {
         // Error case (e.g., HTTP 404)
         statusClass = "error-row";
         status = "Failed";
-        description = data.Error || "An error occurred.";
+        description = data.Error || data.message || "An error occurred.";
       }
   
       // Add the response data to the status table
