@@ -29,11 +29,10 @@ const Statistics = ({ username, userGroup }) => {
 
   // Function to fetch data based on date range
   const fetchData = async (startDate, endDate) => {
-    const apiURL = "http://10.0.40.26:8080/vodafone/status";  // API URL for fetching the data
-    const requestBody = { startDate, endDate };  // Date range for filtering
-
+    // Commenting out the API call
+    
     try {
-      const response = await fetch(apiURL, {
+      const requestBody = { startDate, endDate };
         method: "POST",
         headers: {
           "Content-Type": "application/json",  // Set content type for request
@@ -52,6 +51,43 @@ const Statistics = ({ username, userGroup }) => {
       console.error("Error fetching API data:", error);
       setNoDataFound(true);  // Handle error if fetching data fails
     }
+   
+
+   // Hardcoded data for testing
+   /*  
+    const hardcodedData = [
+      { dateOfDay: "01-01-2023", uploaded_documents: 10, failed_documents: 2 },
+      { dateOfDay: "02-01-2023", uploaded_documents: 15, failed_documents: 1 },
+      { dateOfDay: "03-01-2023", uploaded_documents: 8, failed_documents: 3 },
+      // Data for December 2024
+      { dateOfDay: "01-12-2024", uploaded_documents: 12, failed_documents: 1 },
+      { dateOfDay: "02-12-2024", uploaded_documents: 14, failed_documents: 2 },
+      { dateOfDay: "03-12-2024", uploaded_documents: 9, failed_documents: 3 },
+      { dateOfDay: "04-12-2024", uploaded_documents: 11, failed_documents: 1 },
+      { dateOfDay: "05-12-2024", uploaded_documents: 13, failed_documents: 2 },
+      // Data for November 2024
+      { dateOfDay: "01-11-2024", uploaded_documents: 10, failed_documents: 2 },
+      { dateOfDay: "02-11-2024", uploaded_documents: 15, failed_documents: 1 },
+      { dateOfDay: "03-11-2024", uploaded_documents: 8, failed_documents: 3 },
+      { dateOfDay: "04-11-2024", uploaded_documents: 12, failed_documents: 1 },
+      { dateOfDay: "05-11-2024", uploaded_documents: 14, failed_documents: 2 },
+      // Data for January 2025
+      { dateOfDay: "01-01-2025", uploaded_documents: 16, failed_documents: 2 },
+      { dateOfDay: "02-01-2025", uploaded_documents: 18, failed_documents: 1 },
+      { dateOfDay: "03-01-2025", uploaded_documents: 20, failed_documents: 3 },
+      { dateOfDay: "04-01-2025", uploaded_documents: 22, failed_documents: 1 },
+      { dateOfDay: "05-01-2025", uploaded_documents: 24, failed_documents: 2 },
+      // Data for February 2025
+      { dateOfDay: "01-02-2025", uploaded_documents: 26, failed_documents: 2 },
+      { dateOfDay: "02-02-2025", uploaded_documents: 28, failed_documents: 1 },
+      { dateOfDay: "03-02-2025", uploaded_documents: 30, failed_documents: 3 },
+      { dateOfDay: "04-02-2025", uploaded_documents: 32, failed_documents: 1 },
+      { dateOfDay: "05-02-2025", uploaded_documents: 34, failed_documents: 2 },
+    ];
+
+    setFilteredData(hardcodedData);  // Store hardcoded data
+    setNoDataFound(hardcodedData.length === 0);  // Set noDataFound if no data exists
+    //  */
   };
 
   // Handle date range change (triggered by the DateFilter component)

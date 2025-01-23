@@ -37,14 +37,14 @@ const LoginPage = ({ onLogin }) => {
       });
 
       // Assuming token is in response headers (replace with actual header key)
-      const token = response.headers.get('dctmclienttoken'); // Example: Replace with your actual token header key
+      const token = response.headers.get('dctmclientToken'); // Example: Replace with your actual token header key
 
       if (!token) {
         throw new Error('Token not found in response headers.');
       }
 
       // Store the token in sessionStorage
-      sessionStorage.setItem('dctmclienttoken', token);
+      sessionStorage.setItem('dctmclientToken', token);
 
       // Now, fetch the current user using the token
       const currentUserURL = `${config.documentumUrl}/dctm-rest/repositories/${config.repositoryName}/currentuser`;

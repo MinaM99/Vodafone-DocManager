@@ -47,8 +47,13 @@
 }
 
 .input-panel input:focus {
-  box-shadow: 0 0 5px rgba(230, 0, 0, 0.8);
-  border-color: #e60000;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+  border-color: black;
+}
+
+.input-error {
+  box-shadow: 0 0 5px rgba(255, 0, 0, 0.8); /* Red focus shadow */
+  border-color: red; /* Red border */
 }
 
 /* Button Group */

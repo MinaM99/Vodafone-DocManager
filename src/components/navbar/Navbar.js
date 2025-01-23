@@ -23,13 +23,15 @@ const Navbar = ({ username }) => {
       const response = await fetch(logoutUrl, {
         method: "GET",
         headers: headers,
-       // credentials: "include", // Include cookies with the request
+        // credentials: "include", // Include cookies with the request
       });
 
       if (response.ok) {
         console.log("User logged out successfully");
-        sessionStorage.clear(); // Clear session data
-        window.location.href = "/Vodafone-DocManager"; // Redirect to login page
+        sessionStorage.clear();
+        localStorage.removeItem('userName'); // Optionally remove the user's name from localStorage
+        localStorage.setItem('logoutEvent', JSON.stringify({ userName: username, timestamp: Date.now() })); // Set a flag in localStorage to trigger logout in other tabs
+        window.location.href = "/Vodafone-DocManager/login"; // Redirect to the login page
       } else {
         console.error("Failed to log out", response.status);
       }
@@ -54,7 +56,7 @@ const Navbar = ({ username }) => {
         {
           method: "GET",
           headers: { DCTMClientToken: clientToken },
-          credentials: "include",
+          //credentials: "include",
         }
       );
 

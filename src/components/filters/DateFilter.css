@@ -1,50 +1,65 @@
 .date-filter {
-    display: flex; /* Use flexbox for layout */
-    flex-direction: column; /* Stack labels and inputs vertically */
-    align-items: center; /* Center align items horizontally */
-    gap: 10px; /* Space between elements */
-    max-width: 600px; /* Set a max width for the filter */
-    margin: 0 auto; /* Center the container on the page */
-  }
-  
-  .date-filter .input-group {
-    display: flex; /* Use flexbox for input group */
-    gap: 10px; /* Space between inputs */
-    align-items: center; /* Center align items vertically */
-    width: 100%; /* Make input group take full width */
-  }
-  
-  .date-filter label {
-    font-weight: bold; /* Make labels bold */
-    margin-right: 5px; /* Space between label and input */
-  }
-  
-  .date-filter input[type="date"] {
-    padding: 10px; /* Add padding for better spacing */
-    border: 2px solid #E60000; /* Vodafone red border */
-    border-radius: 8px; /* Curved edges */
-    font-size: 16px; /* Increase font size */
-    outline: none; /* Remove default outline */
-    transition: border-color 0.3s; /* Smooth transition for border color */
-    flex: 1; /* Allow inputs to grow and fill space */
-  }
-  
-  .date-filter input[type="date"]:focus {
-    border-color: #C70000; /* Darker red on focus */
-  }
-  
-  .date-filter button {
-    width: 100%; /* Make button take full width */
-    padding: 10px; /* Add padding for better button size */
-    background-color: #E60000; /* Vodafone red color */
-    color: white; /* White text color */
-    border: none; /* Remove default border */
-    border-radius: 8px; /* Curved edges */
-    font-size: 16px; /* Increase font size */
-    cursor: pointer; /* Change cursor to pointer */
-    transition: background-color 0.3s; /* Smooth transition for hover effect */
-  }
-  
-  .date-filter button:hover {
-    background-color: #C70000; /* Darker red on hover */
-  }
+  display: flex; /* Use flexbox for layout */
+  flex-direction: column; /* Stack elements vertically */
+  align-items: center; /* Center align items horizontally */
+  gap: 20px; /* Space between elements */
+  max-width: 400px; /* Set a max width for the filter */
+  margin: 0 auto; /* Center the container on the page */
+}
+
+.date-filter .input-group {
+  display: flex; /* Use flexbox for input group */
+  flex-direction: column; /* Stack label and input vertically */
+  align-items: center; /* Center align items horizontally */
+  width: 100%; /* Make input group take full width */
+}
+
+.date-filter .date-inputs {
+  display: flex; /* Use flexbox to arrange date inputs horizontally */
+  gap: 10px; /* Space between date inputs */
+  width: 100%; /* Make date inputs container take full width */
+}
+
+.date-filter label {
+  font-weight: bold; /* Make labels bold */
+  margin-bottom: 5px; /* Space between label and input */
+}
+
+.date-filter .react-datepicker-wrapper {
+  width: 100%; /* Make date picker inputs take full width */
+}
+
+.date-filter .react-datepicker__input-container input {
+  padding: 10px; /* Add padding for better spacing */
+  border: 2px solid #000000; /* Vodafone red border */
+  border-radius: 8px; /* Curved edges */
+  font-size: 16px; /* Increase font size */
+  outline: none; /* Remove default outline */
+  transition: border-color 0.3s; /* Smooth transition for border color */
+  width: 100%; /* Ensure input takes full width of wrapper */
+}
+
+.date-filter .react-datepicker__input-container input:focus {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+  border-color: black;
+}
+
+.filter-button {
+  width: 180px; /* Set button width to full */
+  padding: 10px; /* Add padding for better button size */
+  background-color: #E60000; /* Vodafone red color */
+  color: white; /* White text color */
+  border: none; /* Remove default border */
+  border-radius: 8px; /* Curved edges */
+  font-size: 16px; /* Increase font size */
+  cursor: pointer; /* Change cursor to pointer */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.filter-button:hover {
+  background-color: #C70000; /* Darker red on hover */
+}
+
+.date-filter input.error {
+  border: 2px solid red; /* Red border for error state */
+}

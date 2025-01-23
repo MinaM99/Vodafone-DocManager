@@ -61,7 +61,30 @@ const App = () => {
     };
 
     checkToken();
-  }, [clientToken, currentUserURL]);
+
+    // Add event listener for storage changes
+    const handleStorageChange = (event) => {
+      if (event.key === 'logoutEvent') {
+        const { userName } = JSON.parse(event.newValue);
+        if (userName === username) {
+          console.log('Logout event detected for the same user, logging out...');
+          sessionStorage.removeItem("dctmclientToken");
+          sessionStorage.removeItem("userGroup");
+          sessionStorage.removeItem("isLoggedIn");
+          setIsLoggedIn(false);
+          localStorage.clear(); // Clear localStorage
+          window.location.href = "/Vodafone-DocManager/login";
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [clientToken, currentUserURL, username]);
 
   const handleLogin = (token, userGroup) => {
     setUserGroup(userGroup);

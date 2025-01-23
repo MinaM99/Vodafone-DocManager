@@ -17,10 +17,17 @@ const BarChart = ({ data }) => {
     };
   }, [data]);
 
+  // Sort data by date in ascending order
+  const sortedData = data.sort((a, b) => {
+    const dateA = new Date(a.dateOfDay.split('-').reverse().join('-'));
+    const dateB = new Date(b.dateOfDay.split('-').reverse().join('-'));
+    return dateA - dateB;
+  });
+
   // Extract the dateOfDay as labels and map success/failure data accordingly
-  const labels = data.map(item => item.dateOfDay);  // Use dateOfDay as x-axis labels
-  const successData = data.map(item => item.uploaded_documents);
-  const failedData = data.map(item => item.failed_documents);
+  const labels = sortedData.map(item => item.dateOfDay);  // Use dateOfDay as x-axis labels
+  const successData = sortedData.map(item => item.uploaded_documents);
+  const failedData = sortedData.map(item => item.failed_documents);
 
   const chartData = {
     labels,  // Use the dateOfDay values as the labels for the x-axis
@@ -74,7 +81,7 @@ const BarChart = ({ data }) => {
 
   return (
     <div style={{ width: '100%', height: '400px' }}>
-      <Bar data={chartData} options={options} />
+      <Bar id="barChart" data={chartData} options={options} />
     </div>
   );
 };

@@ -1,70 +1,92 @@
-import React, { useState } from "react";
-import "./DateFilter.css";
+import React, { useState } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css'; // Import the default styles
+import { format } from 'date-fns';
+import './DateFilter.css'; // Import the CSS file
+import CustomModal from '../modal/CustomModal'; // Import the CustomModal component
 
 const DateFilter = ({ onDateRangeChange }) => {
   const today = new Date();
-  
-  // Helper function to format dates as DD-MM-YYYY
-  const formatDate = (date) => {
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
-  };
-
-  const formattedToday = formatDate(today);
   const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-  const formattedFirstDay = formatDate(firstDayOfMonth);
 
   // Local state for date range
-  const [startDate, setStartDate] = useState(formattedFirstDay);
-  const [endDate, setEndDate] = useState(formattedToday);
-
-  const handleStartDateChange = (e) => {
-    const dateParts = e.target.value.split("-"); // Format: YYYY-MM-DD
-    const formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`; // Convert to DD-MM-YYYY
-    setStartDate(formattedDate);
-  };
-
-  const handleEndDateChange = (e) => {
-    const dateParts = e.target.value.split("-"); // Format: YYYY-MM-DD
-    const formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`; // Convert to DD-MM-YYYY
-    setEndDate(formattedDate);
-  };
+  const [startDate, setStartDate] = useState(firstDayOfMonth);
+  const [endDate, setEndDate] = useState(today);
+  const [error, setError] = useState(false); // State to track error
+  const [modalMessage, setModalMessage] = useState(""); // State for modal message
+  const [showModal, setShowModal] = useState(false); // State to control modal visibility
 
   const handleFilterClick = () => {
-    const startDateParts = startDate.split("-").reverse().join("-");
-    const endDateParts = endDate.split("-").reverse().join("-");
+    const dateRegex = /^(0?[1-9]|[12][0-9]|3[01])-(0?[1-9]|1[0-2])-\d{4}$/; // Allow only valid date format DD-MM-YYYY
 
-    if (new Date(startDateParts) > new Date(endDateParts)) {
-      alert("Start date cannot exceed end date.");
+    const formattedStartDate = format(startDate, 'dd-MM-yyyy');
+    const formattedEndDate = format(endDate, 'dd-MM-yyyy');
+
+    if (!dateRegex.test(formattedStartDate)) {
+      setModalMessage("Please enter a valid start date in the format DD-MM-YYYY.");
+      setError(true); // Set error state
+      setShowModal(true); // Show the modal
       return;
     }
+
+    if (!dateRegex.test(formattedEndDate)) {
+      setModalMessage("Please enter a valid end date in the format DD-MM-YYYY.");
+      setError(true); // Set error state
+      setShowModal(true); // Show the modal
+      return;
+    }
+
+    if (startDate > endDate) {
+      setModalMessage("Start date cannot exceed end date.");
+      setError(true); // Set error state
+      setShowModal(true); // Show the modal
+      return;
+    }
+
     // Trigger the parent function to fetch data
-    onDateRangeChange(startDate, endDate);
+    onDateRangeChange(formattedStartDate, formattedEndDate);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+  const handleKeyDown = (e) => {
+    const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-'];
+    if (!allowedKeys.includes(e.key) && e.key !== 'Backspace' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'Tab') {
+      e.preventDefault();
+    }
   };
 
   return (
     <div className="date-filter">
-      <div className="input-group">
-        <label htmlFor="start-date">Start Date:</label>
-        <input
-          id="start-date"
-          type="date"
-          value={startDate.split("-").reverse().join("-")} // Convert DD-MM-YYYY to YYYY-MM-DD for input
-          onChange={handleStartDateChange}
-          max={formattedToday.split("-").reverse().join("-")} // Convert DD-MM-YYYY to YYYY-MM-DD for input
-        />
-        <label htmlFor="end-date">End Date:</label>
-        <input
-          id="end-date"
-          type="date"
-          value={endDate.split("-").reverse().join("-")} // Convert DD-MM-YYYY to YYYY-MM-DD for input
-          onChange={handleEndDateChange}
-          max={formattedToday.split("-").reverse().join("-")} // Convert DD-MM-YYYY to YYYY-MM-DD for input
-        />
+      <div className="date-inputs">
+        <div className="input-group">
+          <label htmlFor="start-date">Start Date:</label>
+          <DatePicker
+            selected={startDate}
+            onChange={(date) => setStartDate(date)}
+            dateFormat="dd-MM-yyyy"
+            maxDate={today}
+            onKeyDown={handleKeyDown}
+            className={error ? 'error' : ''}
+          />
+        </div>
+        <div className="input-group">
+          <label htmlFor="end-date">End Date:</label>
+          <DatePicker
+            selected={endDate}
+            onChange={(date) => setEndDate(date)}
+            dateFormat="dd-MM-yyyy"
+            minDate={startDate}
+            maxDate={today}
+            onKeyDown={handleKeyDown}
+            className={error ? 'error' : ''}
+          />
+        </div>
       </div>
-      <button onClick={handleFilterClick}>Filter</button>
+      <button className="filter-button" onClick={handleFilterClick}>Filter</button>
+      <CustomModal show={showModal} onClose={handleCloseModal} message={modalMessage} />
     </div>
   );
 };
