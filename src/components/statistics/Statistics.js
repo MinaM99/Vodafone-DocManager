@@ -29,10 +29,11 @@ const Statistics = ({ username, userGroup }) => {
 
   // Function to fetch data based on date range
   const fetchData = async (startDate, endDate) => {
-    // Commenting out the API call
     
+    const apiUrl = "http://10.0.40.26:8080/vodafone/status";
     try {
       const requestBody = { startDate, endDate };
+      const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",  // Set content type for request
