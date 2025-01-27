@@ -92,21 +92,16 @@ const Records = ({ username }) => {
     if (!msisdn) {
       newErrors.msisdn = "Please enter MSISDN.";
     }
-  
-    const errorKeys = Object.keys(newErrors);
-    if (errorKeys.length > 0) {
+
+    // If there are validation errors, set the errors state and return
+    if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      if (errorKeys.length === 1) {
-        setErrorMessage(newErrors[errorKeys[0]]);
-      } else {
-        setErrorMessage("Please fill in all required fields.");
-      }
-      return; // Prevent submitting if any field is empty
+      return;
     }
-  
+
     setErrors({});
     setErrorMessage("");
-    
+
     // Construct the request body
     const requestBody = {
       customerId: msisdn,
@@ -115,7 +110,7 @@ const Records = ({ username }) => {
       appUserName: username,
       ipAddress: ipAddress, // Include the IP address in the request body
     };
-  
+
     try {
       // Send the POST request
       const response = await fetch("http://10.0.40.26:8080/vodafone/archive", {
@@ -124,18 +119,37 @@ const Records = ({ username }) => {
           'Content-Type': 'application/json',
           DCTMClientToken: clientToken,
         },
-        //credentials: "include", // Include cookies with the request
         body: JSON.stringify(requestBody),
       });
-  
+
       // Parse the response
       const data = await response.json();
-      console.log(requestBody);
-      // Determine the response status and description
-      let statusClass;
+
+      // Reset error states
+      setErrors({});
+
+      // Check for specific error messages
+      if (data.Error === "Box Number & MSISDN don't exist") {
+        setErrors({
+          boxNumber: true,
+          msisdn: true,
+          documentType: true,
+        });
+      } else if (data.Error === "Box doesn't exist") {
+        setErrors({
+          boxNumber: true,
+        });
+      } else if (data.Error === "Document not found. check MSISDN/Document Type") {
+        setErrors({
+          msisdn: true,
+          documentType: true,
+        });
+      }
+
       let status;
       let description;
-  
+      let statusClass;
+
       if (response.ok) {
         // Success case (HTTP 200)
         statusClass = "success-row";
@@ -147,7 +161,7 @@ const Records = ({ username }) => {
         status = "Failed";
         description = data.Error || data.message || "An error occurred.";
       }
-  
+
       // Add the response data to the status table
       const newStatus = {
         boxNumber: boxNumber,

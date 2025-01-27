@@ -100,7 +100,7 @@ const LoginPage = ({ onLogin }) => {
         }
       } else {
         // If there are no groups (entries is empty or undefined), show an error message
-        setError('User does not belong to any valid group.');
+        setError('User not authorized.Please contact system administrator.');
       }
       
 
