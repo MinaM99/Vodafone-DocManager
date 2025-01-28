@@ -14,15 +14,13 @@ const Navbar = ({ username }) => {
   // URL for logout endpoint
   const logoutUrl = `${config.documentumUrl}/dctm-rest/logout`;
 
-  // Common headers for API requests
-  const headers = { DCTMClientToken: clientToken };
-
+  
   // Function to handle user logout
   const handleLogout = async () => {
     try {
       const response = await fetch(logoutUrl, {
         method: "GET",
-        headers: headers,
+        headers: { DCTMClientToken: clientToken },
         // credentials: "include", // Include cookies with the request
       });
 
