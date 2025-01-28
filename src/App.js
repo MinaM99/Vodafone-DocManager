@@ -163,6 +163,8 @@ const App = () => {
                       ? "/Vodafone-DocManager/statistics"
                       : userGroup === "vf_records_users"
                       ? "/Vodafone-DocManager/records"
+                      : userGroup === "both"
+                      ? "/Vodafone-DocManager/statistics"  // Default to statistics if both groups
                       : "/Vodafone-DocManager/login"  // Fallback route
                   }
                 />
