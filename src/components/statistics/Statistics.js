@@ -30,7 +30,7 @@ const Statistics = ({ username, userGroup }) => {
   // Function to fetch data based on date range
   const fetchData = async (startDate, endDate) => {
     
-    const apiUrl = "http://10.0.40.26:8080/vodafone/status";
+    const apiUrl = `${config.documentumUrl}/vodafone/status`;
     try {
       const requestBody = { startDate, endDate };
       const response = await fetch(apiUrl, {
