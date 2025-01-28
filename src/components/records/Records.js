@@ -16,8 +16,12 @@ const Records = ({ username }) => {
   const [errors, setErrors] = useState({}); // State for input errors
   const [ipAddress, setIpAddress] = useState(''); // State for IP address
 
-
-  const clientToken = sessionStorage.getItem("dctmclientToken");
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  };
+  const clientToken = getCookie("dctmclientToken");
 
   const dqlQuery = '?dql=select%20name%20from%20dm_type%20where%20name%20like%20%27voda_%25%27';
   const dqlUrl = `${config.documentumUrl}/dctm-rest/repositories/${config.repositoryName}${dqlQuery}`;

@@ -8,6 +8,10 @@ const LoginPage = ({ onLogin }) => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false); // Loading state
 
+  const setCookie = (name, value) => {
+    document.cookie = `${name}=${value}; path=/`;
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -43,8 +47,8 @@ const LoginPage = ({ onLogin }) => {
         throw new Error('Token not found in response headers.');
       }
 
-      // Store the token in sessionStorage
-      sessionStorage.setItem('dctmclientToken', token);
+      // Set the token as a cookie with a 1-hour expiration
+      setCookie('dctmclientToken', token);
 
       // Now, fetch the current user using the token
       const currentUserURL = `${config.documentumUrl}/dctm-rest/repositories/${config.repositoryName}/currentuser`;
@@ -84,25 +88,28 @@ const LoginPage = ({ onLogin }) => {
       const currentUserGroupData = await currentUserGroupResponse.json();
       console.log('User Groups:', currentUserGroupData);
       
-      // Check if 'entries' exist and is not empty
       if (currentUserGroupData.entries && currentUserGroupData.entries.length > 0) {
-        // Find the valid group the user is part of (either vf_stats_users or vf_records_users)
-        const validGroup = currentUserGroupData.entries.find(entry =>
-          entry.title === 'vf_stats_users' || entry.title === 'vf_records_users'
-        );
-      
-        if (validGroup) {
-          // If the user is part of a valid group, pass only the group's title and the token to the parent component
-          onLogin(token, validGroup.title);
+        // Check if the user is part of vf_stats_users or vf_records_users or both
+        const isStatsUser = currentUserGroupData.entries.some(entry => entry.title === 'vf_stats_users');
+        const isRecordsUser = currentUserGroupData.entries.some(entry => entry.title === 'vf_records_users');
+        
+        if (isStatsUser && isRecordsUser) {
+          // User is part of both groups
+          onLogin(token, 'both', userName);
+        } else if (isStatsUser) {
+          // User is part of vf_stats_users group
+          onLogin(token, 'vf_stats_users', userName);
+        } else if (isRecordsUser) {
+          // User is part of vf_records_users group
+          onLogin(token, 'vf_records_users', userName);
         } else {
-          // If the user is not part of a valid group, show the error message
+          // User is not part of any valid group
           setError('User group does not have access to this application.');
         }
       } else {
         // If there are no groups (entries is empty or undefined), show an error message
-        setError('User not authorized.Please contact system administrator.');
+        setError('User not authorized. Please contact the system administrator.');
       }
-      
 
     } catch (err) {
       console.error('Login error:', err);

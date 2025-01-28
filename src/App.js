@@ -17,14 +17,21 @@ const App = () => {
   const [isTokenChecked, setIsTokenChecked] = useState(false);  // Check if token validation is done
   const [username, setUsername] = useState("");  // Store logged-in user's username
   const [userGroup, setUserGroup] = useState("");  // Store the user group
-  const clientToken = sessionStorage.getItem("dctmclientToken");  // Retrieve token from session storage
 
   const currentUserURL = `${config.documentumUrl}/dctm-rest/repositories/${config.repositoryName}/currentuser`;  // URL for current user data
 
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  };
+
   useEffect(() => {
     const checkToken = async () => {
-      const storedUserGroup = sessionStorage.getItem("userGroup");
-      const storedIsLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";  // Check if user is logged in
+      const clientToken = getCookie("dctmclientToken");
+      const storedIsLoggedIn = localStorage.getItem("isLoggedIn") === "true";  // Check if user is logged in
+      const storedUsername = localStorage.getItem("username");
+      const storedUserGroup = localStorage.getItem("userGroup");
 
       if (!clientToken || !storedIsLoggedIn) {
         setIsLoggedIn(false);
@@ -40,21 +47,36 @@ const App = () => {
 
         if (response.ok) {
           const userData = await response.json();
-          setUsername(userData.properties.user_name || "Success");  // Set username
-          setUserGroup(storedUserGroup || userData.properties.user_group);  // Set user group
-          setIsLoggedIn(true);
+          const currentUsername = userData.properties.user_name;
+
+          if (storedUsername && storedUsername !== currentUsername) {
+            console.error("Different user detected, logging out...");
+            document.cookie = "dctmclientToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            localStorage.removeItem("userGroup");
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("username");
+            setIsLoggedIn(false);
+          } else {
+            setUsername(currentUsername || "Success");  // Set username
+            setUserGroup(storedUserGroup || userData.properties.user_group);  // Set user group
+            localStorage.setItem("username", currentUsername);  // Store username in localStorage
+            setIsLoggedIn(true);
+            localStorage.setItem("loginEvent", JSON.stringify({ isLoggedIn: true, username: currentUsername })); // Set login event in localStorage
+          }
         } else {
           console.error("Invalid token, redirecting...");
-          sessionStorage.removeItem("dctmclientToken");
-          sessionStorage.removeItem("userGroup");
-          sessionStorage.removeItem("isLoggedIn");
+          document.cookie = "dctmclientToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          localStorage.removeItem("userGroup");
+          localStorage.removeItem("isLoggedIn");
+          localStorage.removeItem("username");
           setIsLoggedIn(false);
         }
       } catch (error) {
         console.error("Error validating token:", error);
-        sessionStorage.removeItem("dctmclientToken");
-        sessionStorage.removeItem("userGroup");
-        sessionStorage.removeItem("isLoggedIn");
+        document.cookie = "dctmclientToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        localStorage.removeItem("userGroup");
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("username");
         setIsLoggedIn(false);
       }
       setIsTokenChecked(true);
@@ -62,36 +84,64 @@ const App = () => {
 
     checkToken();
 
-    // Add event listener for storage changes
+    // Listen for changes in localStorage
     const handleStorageChange = (event) => {
-      if (event.key === 'logoutEvent') {
-        const { userName } = JSON.parse(event.newValue);
-        if (userName === username) {
-          console.log('Logout event detected for the same user, logging out...');
-          sessionStorage.removeItem("dctmclientToken");
-          sessionStorage.removeItem("userGroup");
-          sessionStorage.removeItem("isLoggedIn");
+      if (event.key === "loginEvent") {
+        const { isLoggedIn, username } = JSON.parse(event.newValue);
+        if (isLoggedIn) {
+          const clientToken = getCookie("dctmclientToken");
+          if (clientToken) {
+            setUsername(username);
+            setIsLoggedIn(true);
+          }
+        } else {
           setIsLoggedIn(false);
-          localStorage.clear(); // Clear localStorage
-          window.location.href = "/Vodafone-DocManager/login";
         }
       }
     };
 
-    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener("storage", handleStorageChange);
 
-    // Cleanup event listener on component unmount
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener("storage", handleStorageChange);
     };
-  }, [clientToken, currentUserURL, username]);
+  }, []);
 
-  const handleLogin = (token, userGroup) => {
+  const handleLogin = (token, userGroup, username) => {
     setUserGroup(userGroup);
     setIsLoggedIn(true);
-    sessionStorage.setItem("dctmclientToken", token);  // Store token
-    sessionStorage.setItem("userGroup", userGroup);  // Store user group
-    sessionStorage.setItem("isLoggedIn", "true");  // Mark as logged in
+    setUsername(username);
+   localStorage.setItem("userGroup", userGroup);  // Store user group
+    localStorage.setItem("isLoggedIn", "true");  // Mark as logged in
+    localStorage.setItem("username", username);  // Store username
+    localStorage.setItem("loginEvent", JSON.stringify({ isLoggedIn: true, username })); // Set login event in localStorage
+  };
+
+  const handleLogout = async () => {
+    const clientToken = getCookie("dctmclientToken");
+    const logoutUrl = `${config.documentumUrl}/dctm-rest/logout`;
+
+    try {
+      const response = await fetch(logoutUrl, {
+        method: "GET",
+        headers: { DCTMClientToken: clientToken },
+        // credentials: "include", // Include cookies with the request
+      });
+
+      if (response.ok) {
+        console.log("User logged out successfully");
+        document.cookie = "dctmclientToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        localStorage.removeItem("userGroup");
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("username");
+        setIsLoggedIn(false);
+         window.location.href = "/Vodafone-DocManager/login"; // Redirect to the login page
+      } else {
+        console.error("Failed to log out", response.status);
+      }
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
   };
 
   if (!isTokenChecked) {
@@ -101,7 +151,7 @@ const App = () => {
   return (
     <Router>
       <div className={`app ${isLoggedIn ? "logged-in" : "login-page"}`}> 
-        {isLoggedIn && <Navbar username={username} />}   
+        {isLoggedIn && <Navbar username={username} userGroup={userGroup} onLogout={handleLogout} />}   
         <Routes>
           <Route
             path="/Vodafone-DocManager/login"
@@ -126,7 +176,7 @@ const App = () => {
           <Route
             path="/Vodafone-DocManager/statistics"
             element={
-              isLoggedIn && userGroup === "vf_stats_users" ? (
+              isLoggedIn && (userGroup === "vf_stats_users" || userGroup === "both") ? (
                 <Statistics username={username} userGroup={userGroup} />  // Pass username and userGroup to Statistics
               ) : (
                 <Navigate to="/Vodafone-DocManager/login" />
@@ -138,7 +188,7 @@ const App = () => {
           <Route
             path="/Vodafone-DocManager/records/*"
             element={
-              isLoggedIn && userGroup === "vf_records_users" ? (
+              isLoggedIn && (userGroup === "vf_records_users" || userGroup === "both") ? (
                 <Records username={username} />  // Pass username to Records
               ) : (
                 <Navigate to="/Vodafone-DocManager/login" />
@@ -157,6 +207,8 @@ const App = () => {
                       ? "/Vodafone-DocManager/statistics"
                       : userGroup === "vf_records_users"
                       ? "/Vodafone-DocManager/records"
+                      : userGroup === "both"
+                      ? "/Vodafone-DocManager/statistics"  // Default to statistics if both groups
                       : "/Vodafone-DocManager/login"  // Fallback if userGroup is neither
                   }
                 />

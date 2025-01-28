@@ -4,43 +4,22 @@ import UserIcon from "./../../assets/user-icon.png";
 import VodafoneIcon from "./../../assets/vodafone-icon.png";
 import config from "./../../data/config.json"; // Import config file
 
-const Navbar = ({ username }) => {
-  // State for showing the logout confirmation popup
+const Navbar = ({ username, userGroup, onLogout }) => {
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
+  const [currentView, setCurrentView] = useState(userGroup === 'both' ? 'statistics' : userGroup);
 
-  // Retrieve the client token from sessionStorage
-  const clientToken = sessionStorage.getItem("dctmclientToken");
-
-  // URL for logout endpoint
-  const logoutUrl = `${config.documentumUrl}/dctm-rest/logout`;
-
-  
-  // Function to handle user logout
-  const handleLogout = async () => {
-    try {
-      const response = await fetch(logoutUrl, {
-        method: "GET",
-        headers: { DCTMClientToken: clientToken },
-        // credentials: "include", // Include cookies with the request
-      });
-
-      if (response.ok) {
-        console.log("User logged out successfully");
-        sessionStorage.clear();
-        localStorage.removeItem('userName'); // Optionally remove the user's name from localStorage
-        localStorage.setItem('logoutEvent', JSON.stringify({ userName: username, timestamp: Date.now() })); // Set a flag in localStorage to trigger logout in other tabs
-        window.location.href = "/Vodafone-DocManager/login"; // Redirect to the login page
-      } else {
-        console.error("Failed to log out", response.status);
-      }
-    } catch (error) {
-      console.error("Error logging out:", error);
-    }
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
   };
+  
+  // Toggle the logout confirmation popup
+  const toggleLogoutPopup = () => setShowLogoutPopup(!showLogoutPopup);
 
   // Function to validate the token and redirect based on its status
   const checkAuthenticationAndRedirect = async () => {
-    const clientToken = sessionStorage.getItem("dctmclientToken");
+    const clientToken = getCookie("dctmclientToken");
     if (!clientToken) {
       console.log("No token found, redirecting to login page");
       window.location.href = "/Vodafone-DocManager";
@@ -62,18 +41,17 @@ const Navbar = ({ username }) => {
         console.log("Token is valid, refreshing page");
         window.location.reload();
       } else {
-        sessionStorage.removeItem("dctmclientToken");
+        document.cookie = "dctmclientToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         window.location.href = "/Vodafone-DocManager";
       }
     } catch (error) {
       console.error("Error validating token:", error);
-      sessionStorage.removeItem("dctmclientToken");
+      document.cookie = "dctmclientToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       window.location.href = "/Vodafone-DocManager";
     }
   };
 
-  // Toggle the logout confirmation popup
-  const toggleLogoutPopup = () => setShowLogoutPopup(!showLogoutPopup);
+
 
   return (
     <nav className="navbar">
@@ -121,7 +99,7 @@ const Navbar = ({ username }) => {
         {showLogoutPopup && (
           <div className="logout-popup">
             <p>Are you sure you want to logout?</p>
-            <button className="logout-yes-button" onClick={handleLogout}>
+            <button className="logout-yes-button" onClick={onLogout}>
               Yes
             </button>
             <button className="logout-no-button" onClick={toggleLogoutPopup}>
