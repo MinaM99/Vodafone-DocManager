@@ -93,10 +93,15 @@ const Records = ({ username }) => {
       newErrors.msisdn = "Please enter MSISDN.";
     }
 
-    // If there are validation errors, set the errors state and return
-    if (Object.keys(newErrors).length > 0) {
+    const errorKeys = Object.keys(newErrors);
+    if (errorKeys.length > 0) {
       setErrors(newErrors);
-      return;
+      if (errorKeys.length === 1) {
+        setErrorMessage(newErrors[errorKeys[0]]);
+      } else {
+        setErrorMessage("Please fill in all required fields.");
+      }
+      return; // Prevent submitting if any field is empty
     }
 
     setErrors({});
