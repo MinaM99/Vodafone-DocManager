@@ -122,7 +122,7 @@ const Records = ({ username }) => {
 
     try {
       // Send the POST request
-      const response = await fetch("http://10.0.40.26:8080/vodafone/archive", {
+      const response = await fetch(`${config.documentumUrl}/vodafone/archive`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
