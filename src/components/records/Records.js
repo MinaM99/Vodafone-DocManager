@@ -51,7 +51,7 @@ const Records = ({ username }) => {
           "voda_cash_contract",
           "voda_post_paid_contract",
           "voda_pre_paid_contract",
-          "voda_corporate_contract",
+          "voda_corporate_contracts",
           "voda_adsl_contract",
         ];
         const filteredTypes = allTypes.filter((type) => desiredTypes.includes(type));
