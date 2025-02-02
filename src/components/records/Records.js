@@ -16,8 +16,12 @@ const Records = ({ username }) => {
   const [errors, setErrors] = useState({}); // State for input errors
   const [ipAddress, setIpAddress] = useState(''); // State for IP address
 
-
-  const clientToken = sessionStorage.getItem("dctmclientToken");
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  };
+  const clientToken = getCookie("dctmclientToken");
 
   const dqlQuery = '?dql=select%20name%20from%20dm_type%20where%20name%20like%20%27voda_%25%27';
   const dqlUrl = `${config.documentumUrl}/dctm-rest/repositories/${config.repositoryName}${dqlQuery}`;
@@ -47,7 +51,7 @@ const Records = ({ username }) => {
           "voda_cash_contract",
           "voda_post_paid_contract",
           "voda_pre_paid_contract",
-          "voda_corporate_contract",
+          "voda_corporate_contracts",
           "voda_adsl_contract",
         ];
         const filteredTypes = allTypes.filter((type) => desiredTypes.includes(type));
@@ -118,7 +122,7 @@ const Records = ({ username }) => {
 
     try {
       // Send the POST request
-      const response = await fetch("http://10.0.40.26:8080/vodafone/archive", {
+      const response = await fetch(`${config.documentumUrl}/vodafone/archive`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
