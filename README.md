@@ -1,3 +1,5 @@
+### Main README (Root Repo)
+
 # Vodafone Documentum Documents Manager
 
 ## About the Project
@@ -20,111 +22,110 @@ Additionally, the **v2 branch** in GitHub introduces enhanced **user session man
 - **Cross-tab login consistency**, allowing the user to stay logged in across all tabs of the same browser.
 - Improved security and session management.
 
-This README provides instructions for setting up, running, and deploying the **Vodafone-DocManager** React application.
-
 ---
 
 ## Prerequisites
 
 - Node.js installed on your system
+- PM2 process manager installed
 - Tomcat server installed and running
 
 ---
 
-## Steps to Run and Deploy the Application
+## Frontend Setup & Deployment
 
 ### 1. Install Dependencies
 
-Ensure you have the required dependencies for the React app installed. Run the following command in the root directory of the project:
+Navigate to the `frontend` folder and install dependencies:
 
 ```bash
+cd frontend
 npm install
 ```
 
 ### 2. Start the Development Server
 
-To start the app in development mode, use the command:
-
 ```bash
 npm start
 ```
 
-This will run the app locally. You can access it in your browser at:
-
+Access the app in your browser at:
 ```
 http://localhost:3000
 ```
 
-### 3. Build the App for Production
-
-To deploy the app, create a production build by running:
+### 3. Build for Production
 
 ```bash
 npm run build
 ```
 
-This will generate the production-ready files in a `build` directory in the project root.
-
 ### 4. Deploy to Tomcat
 
-To deploy the app on a Tomcat server:
-
-1. Navigate to your Tomcat's `webapps` directory.
+1. Navigate to Tomcat’s `webapps` directory.
 2. Create a new folder named `Vodafone-DocManager`:
    ```bash
    <TOMCAT_HOME>/webapps/Vodafone-DocManager
    ```
-3. Copy the contents of the `build` folder from your React app into this new folder:
+3. Copy the `build` folder contents:
    ```bash
    cp -r build/* <TOMCAT_HOME>/webapps/Vodafone-DocManager
    ```
-4. **Add `WEB-INF` and `web.xml` Configuration**:
-   
-   - Inside the `Vodafone-DocManager` folder, create a new directory called `WEB-INF`.
-   - In the `WEB-INF` directory, create a file named `web.xml` and add the following content:
-     
-     ```xml
-     <web-app xmlns="http://java.sun.com/xml/ns/javaee" version="3.0">
-         <welcome-file-list>
-             <welcome-file>index.html</welcome-file>
-         </welcome-file-list>
+4. Configure `WEB-INF/web.xml`:
 
-         <error-page>
-             <error-code>404</error-code>
-             <location>/index.html</location>
-         </error-page>
-     </web-app>
-     ```
+```xml
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" version="3.0">
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/index.html</location>
+    </error-page>
+</web-app>
+```
 
-   This step ensures proper handling of React Router's client-side routing, avoiding `404` errors when navigating directly to routes.
-
-5. Restart the Tomcat server to apply the changes.
-
-### 5. Access the App on Tomcat
-
-Once the files are copied and the Tomcat server is running, access the app in your browser at:
-
+5. Restart Tomcat and access at:
 ```
 http://localhost:<TOMCAT_PORT>/Vodafone-DocManager
 ```
 
-Replace `<TOMCAT_PORT>` with the port number where your Tomcat server is running (default is usually `8080`).
+---
+
+## Backend Setup & Deployment
+
+### 1. Install Dependencies
+
+Navigate to the `backend` folder and install dependencies:
+
+```bash
+cd backend
+npm install
+```
+
+### 2. Start the Backend with PM2
+
+```bash
+pm2 start server.js
+```
+
+Check running applications:
+```sh
+pm2 list
+```
+
+View logs:
+```sh
+pm2 logs
+```
+
+### 3. Auto-Restart Backend on System Reboot
+
+```sh
+pm2 startup
+pm2 save
+```
 
 ---
 
-## Notes
 
-- Configuration of Documentum port and repository name is located in the `src/data/config.json` file.
-- Ensure that the Tomcat server is properly configured to serve static files.
-- If you encounter any issues, check the Tomcat logs for errors.
-- For customization or additional configurations, modify the `build` process or adjust the Tomcat settings accordingly.
-
----
-
-## Troubleshooting
-
-If the app doesn't load as expected:
-
-- Ensure that the `npm run build` command was successful and all files were generated in the `build` folder.
-- Check the permissions of the `Vodafone-DocManager` folder in the Tomcat `webapps` directory.
-- Verify that the Tomcat server is running and accessible.
