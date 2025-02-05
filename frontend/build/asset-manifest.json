@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/Vodafone-DocManager/static/css/main.d79c3a35.css",
+    "main.js": "/Vodafone-DocManager/static/js/main.1e653751.js",
+    "static/js/488.1aa8229e.chunk.js": "/Vodafone-DocManager/static/js/488.1aa8229e.chunk.js",
+    "static/media/vodafone-icon.png": "/Vodafone-DocManager/static/media/vodafone-icon.b4479d7e1e8621dfba00.png",
+    "static/media/user-icon.png": "/Vodafone-DocManager/static/media/user-icon.1971915c3c3511f2de3a.png",
+    "static/media/vodafone-background.jpg": "/Vodafone-DocManager/static/media/vodafone-background.2e6314dcecdb78d71458.jpg",
+    "index.html": "/Vodafone-DocManager/index.html",
+    "main.d79c3a35.css.map": "/Vodafone-DocManager/static/css/main.d79c3a35.css.map",
+    "main.1e653751.js.map": "/Vodafone-DocManager/static/js/main.1e653751.js.map",
+    "488.1aa8229e.chunk.js.map": "/Vodafone-DocManager/static/js/488.1aa8229e.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d79c3a35.css",
+    "static/js/main.1e653751.js"
+  ]
+}

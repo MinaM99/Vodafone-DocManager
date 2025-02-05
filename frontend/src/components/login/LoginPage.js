@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './LoginPage.css';
 import config from './../../data/config.json';
 
@@ -7,6 +7,43 @@ const LoginPage = ({ onLogin }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false); // Loading state
+
+  // Fetch data from the backend using useEffect to get Windows UserName
+  useEffect(() => {
+    const fetchUsername = async () => {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // Set timeout to 5 seconds
+
+      try {
+        const response = await fetch(`${config.backendURL}/get-username`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId); // Clear the timeout if the request completes in time
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch username');
+        }
+
+        const data = await response.json();
+        setUsername(data.username);
+        console.log('Username:', data.username);
+      } catch (error) {
+        if (error.name === 'AbortError') {
+          console.error('Fetch request timed out');
+        } else {
+          console.error('Error:', error);
+        }
+        setUsername('INVALID');
+      }
+    };
+
+    fetchUsername();
+  }, []); // Empty dependency array means this runs only once when the component mounts
 
   const setCookie = (name, value) => {
     document.cookie = `${name}=${value}; path=/`;
@@ -47,7 +84,7 @@ const LoginPage = ({ onLogin }) => {
         throw new Error('Token not found in response headers.');
       }
 
-      // Set the token as a cookie with a 1-hour expiration
+      // Set the token as a session cookie
       setCookie('dctmclientToken', token);
 
       // Now, fetch the current user using the token
@@ -131,7 +168,7 @@ const LoginPage = ({ onLogin }) => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
-            disabled={isLoading} // Disable input while loading
+            disabled // Disable input for user input
           />
         </div>
         <div className="input-group">
