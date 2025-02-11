@@ -61,17 +61,7 @@ npm run build
 ```
 
 ### 4. Deploy to Tomcat
-
-1. Navigate to Tomcat’s `webapps` directory.
-2. Create a new folder named `Vodafone-DocManager`:
-   ```bash
-   <TOMCAT_HOME>/webapps/Vodafone-DocManager
-   ```
-3. Copy the `build` folder contents:
-   ```bash
-   cp -r build/* <TOMCAT_HOME>/webapps/Vodafone-DocManager
-   ```
-4. Configure `WEB-INF/web.xml`:
+1. Configure `WEB-INF/web.xml`:
 
 - Inside the `Vodafone-DocManager/frontend/build` folder, create a new directory called `WEB-INF`.
    - In the `WEB-INF` directory, create a file named `web.xml` and add the following content:
@@ -90,6 +80,16 @@ npm run build
      ```
 
    This step is necessary to handle client-side routing correctly in a React application. When using React Router, refreshing or directly accessing a route (e.g., `/login`) can result in a `404 Not Found` error because the Tomcat server tries to resolve the route itself instead of serving `index.html`. The `web.xml` configuration ensures that any unrecognized route will fallback to `index.html`, allowing React Router to handle the routing.
+
+2. Navigate to Tomcat’s `webapps` directory.
+3. Create a new folder named `Vodafone-DocManager`:
+   ```bash
+   <TOMCAT_HOME>/webapps/Vodafone-DocManager
+   ```
+4. Copy the `build` folder contents:
+   ```bash
+   cp -r build/* <TOMCAT_HOME>/webapps/Vodafone-DocManager
+   ```
 
 5. Restart Tomcat and access at:
 ```
