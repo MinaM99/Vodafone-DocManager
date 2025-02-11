@@ -1,0 +1,28 @@
+first of all you need to install PM2 online using this the following command:
+npm install -g pm2
+ 
+if not donwload pm2 package from other source then copy it here:
+1. Extract the .tgz file (using PowerShell):
+tar -xvzf pm2-x.x.x.tgz
+ 
+2.install PM2 from the extracted folder:
+npm install -g ./package
+ 
+ 
+command to run node.js backend :
+pm2 start server.js --name vodafoneDocBackend
+ 
+commandto save the process:
+pm2 save
+ 
+commandto to enable PM2 to start on system boot:
+pm2 startup
+ 
+command to kill processes:
+pm2 kill
+ 
+command to list porcesses runnning:
+pm2 list
+ 
+NOTE: if you could not install package you can run it locally from node modules from this directory node_modules\.bin\pm2
+example: node_modules\.bin\pm2 pm2 start server.js
