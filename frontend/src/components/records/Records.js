@@ -2,9 +2,6 @@ import React, { useState, useEffect } from "react";
 import "./Records.css"; // Ensure this file includes the styles above
 import config from "./../../data/config.json";
 
-
-
-
 const Records = ({ username }) => {
   // State for input fields
   const [boxNumber, setBoxNumber] = useState("");
@@ -15,6 +12,7 @@ const Records = ({ username }) => {
   const [errorMessage, setErrorMessage] = useState(""); // State for error message
   const [errors, setErrors] = useState({}); // State for input errors
   const [ipAddress, setIpAddress] = useState(''); // State for IP address
+  const [loading, setLoading] = useState(false); // State for loading
 
   const getCookie = (name) => {
     const value = `; ${document.cookie}`;
@@ -84,7 +82,7 @@ const Records = ({ username }) => {
   
   
   const handleSubmit = async () => {
-    
+    setLoading(true); // Set loading state to true
     const newErrors = {};
     // Check if any of the input fields are empty
     if (!boxNumber) {
@@ -105,6 +103,7 @@ const Records = ({ username }) => {
       } else {
         setErrorMessage("Please fill in all required fields.");
       }
+      setLoading(false); // Set loading state to false
       return; // Prevent submitting if any field is empty
     }
 
@@ -197,6 +196,8 @@ const Records = ({ username }) => {
       };
       setStatusData((prevStatusData) => [...prevStatusData, newStatus]);
       setErrorMessage(""); // Clear error message on successful submission
+    } finally {
+      setLoading(false); // Set loading state to false
     }
   };
   
@@ -228,6 +229,7 @@ const Records = ({ username }) => {
                 setErrors((prevErrors) => ({ ...prevErrors, boxNumber: "" }));
               }}
               className={errors.boxNumber ? "input-error" : ""}
+              disabled={loading} // Disable input when loading
             />
           </div>
           <div>
@@ -242,6 +244,7 @@ const Records = ({ username }) => {
                 setErrors((prevErrors) => ({ ...prevErrors, documentType: "" }));
               }}
               className={errors.documentType ? "input-error" : ""}
+              disabled={loading} // Disable input when loading
             >
               <option value="">Select a document type</option>
               {documentTypes.map((type, index) => (
@@ -264,14 +267,13 @@ const Records = ({ username }) => {
                 setErrors((prevErrors) => ({ ...prevErrors, msisdn: "" }));
               }}
               className={errors.msisdn ? "input-error" : ""}
+              disabled={loading} // Disable input when loading
             />
           </div>
           {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
           <div className="button-group">
-            <button onClick={handleSubmit}>Submit</button>
-            <button className="reset-button" onClick={handleReset}>
-              Reset
-            </button>
+            <button onClick={handleSubmit} disabled={loading}>Submit</button>
+            <button className="reset-button" onClick={handleReset} disabled={loading}>Reset</button>
           </div>
         </div>
 
@@ -306,6 +308,11 @@ const Records = ({ username }) => {
           )}
         </div>
       </div>
+      {loading && (
+        <div className="loading-overlay">
+          <div className="spinner"></div>
+        </div>
+      )} {/* Loading spinner */}
     </div>
   );
 };
