@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './Navbar.css';
+import classes from './Navbar.module.css';
 import config from './../../data/config.json';
 import VodafoneIcon from './../../assets/vodafone-icon.png';
 import UserIcon from './../../assets/user-icon.png'; // Import the user icon
@@ -59,32 +59,32 @@ const Navbar = ({ username, userGroup, onLogout }) => {
   };
 
   return (
-    <nav className="navbar">
+    <nav className={classes.navbar}>
       {/* Left section: Logo */}
-      <div className="navbar-left">
+      <div className={classes.navbarLeft}>
         <Link to="#" onClick={(e) => { e.preventDefault();
           checkAuthenticationAndRedirect();
         }}>
           <img
             src={VodafoneIcon}
             alt="Vodafone Logo"
-            className="vodafone-logo"
+            className={classes.vodafoneLogo}
           />
         </Link>
       </div>
 
       {/* Center section: Navigation items */}
-      <div className="navbar-center">
+      <div className={classes.navbarCenter}>
         {userGroup === 'both' && (
           <>
             <button
-              className={`nav-item ${currentView === 'statistics' ? 'active' : ''}`}
+              className={`${classes.navItem} ${currentView === 'statistics' ? classes.active : ''}`}
               onClick={() => handleNavigation('statistics')}
             >
               Statistics
             </button>
             <button
-              className={`nav-item ${currentView === 'records' ? 'active' : ''}`}
+              className={`${classes.navItem} ${currentView === 'records' ? classes.active : ''}`}
               onClick={() => handleNavigation('records')}
             >
               Records
@@ -93,7 +93,7 @@ const Navbar = ({ username, userGroup, onLogout }) => {
         )}
         {userGroup === 'vf_stats_users' && (
           <button
-            className="nav-item active"
+            className={`${classes.navItem} ${classes.active}`}
             onClick={() => handleNavigation('statistics')}
           >
             Statistics
@@ -101,7 +101,7 @@ const Navbar = ({ username, userGroup, onLogout }) => {
         )}
         {userGroup === 'vf_records_users' && (
           <button
-            className="nav-item active"
+            className={`${classes.navItem} ${classes.active}`}
             onClick={() => handleNavigation('records')}
           >
             Records
@@ -110,25 +110,25 @@ const Navbar = ({ username, userGroup, onLogout }) => {
       </div>
 
       {/* Right section: User icon and username */}
-      <div className="navbar-right">
-        <span className="username">{username}</span>
+      <div className={classes.navbarRight}>
+        <span className={classes.username}>{username}</span>
         <img
           src={UserIcon}
           alt="User Icon"
-          className="user-icon"
+          className={classes.userIcon}
           onClick={toggleLogoutPopup}
         />
       </div>
 
       {/* Logout confirmation popup */}
       {showLogoutPopup && (
-        <div className="logout-popup">
-          <div className="logout-popup-content">
+        <div className={classes.logoutPopup}>
+          <div className={classes.logoutPopupContent}>
             <p>Are you sure you want to logout?</p>
-            <button className="confirm-logout-button" onClick={onLogout}>
+            <button className={classes.confirmLogoutButton} onClick={onLogout}>
               Yes
             </button>
-            <button className="cancel-logout-button" onClick={toggleLogoutPopup}>
+            <button className={classes.cancelLogoutButton} onClick={toggleLogoutPopup}>
               No
             </button>
           </div>

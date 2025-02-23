@@ -10,21 +10,21 @@
 }
 
 /* Push content below navbar */
-.records-container {
+.recordsContainer {
   margin-top: 60px; /* Adjust this depending on the height of your navbar */
   padding: 20px;
 }
 
 /* Input Panel */
-.input-panel {
+.inputPanel {
   margin-bottom: 20px;
 }
 
-.input-panel div {
+.inputPanel div {
   margin-bottom: 15px;
 }
 
-.input-panel label {
+.inputPanel label {
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
@@ -33,8 +33,8 @@
 }
 
 /* Input Fields */
-.input-panel input,
-.input-panel select {
+.inputPanel input,
+.inputPanel select {
   padding: 12px;
   width: 100%;
   max-width: 400px;
@@ -46,18 +46,18 @@
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.input-panel input:focus {
+.inputPanel input:focus {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
   border-color: black;
 }
 
-.input-error {
+.inputError {
   box-shadow: 0 0 5px rgba(255, 0, 0, 0.8); /* Red focus shadow */
   border-color: red; /* Red border */
 }
 
 /* Button Group */
-.input-panel .button-group {
+.inputPanel .buttonGroup {
   display: flex;
   justify-content: space-between; /* Distribute buttons evenly */
   width: 100%;
@@ -67,7 +67,7 @@
 }
 
 /* Buttons */
-.input-panel button {
+.inputPanel button {
   flex: 1;
   padding: 12px;
   border: none;
@@ -80,21 +80,21 @@
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.input-panel button:hover {
+.inputPanel button:hover {
   background-color: #b80000;
   transform: scale(1.02);
 }
 
-.input-panel .reset-button {
+.inputPanel .resetButton {
   background-color: #999;
 }
 
-.input-panel .reset-button:hover {
+.inputPanel .resetButton:hover {
   background-color: #666;
 }
 
 /* Status Panel */
-.status-panel {
+.statusPanel {
   margin-top: 20px;
   padding: 10px;
   border-radius: 10px;
@@ -103,7 +103,7 @@
   overflow-x: auto; /* Enable horizontal scrolling for the table */
 }
 
-.status-panel table {
+.statusPanel table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
@@ -111,8 +111,8 @@
   overflow-x: auto; /* Ensure scrollability within the panel */
 }
 
-.status-panel th,
-.status-panel td {
+.statusPanel th,
+.statusPanel td {
   border: 1px solid #ddd;
   padding: 10px;
   text-align: left;
@@ -120,25 +120,24 @@
   word-wrap: break-word; /* Break long words to prevent overflow */
 }
 
-.status-panel th {
+.statusPanel th {
   background-color: #f4f4f4;
   font-weight: bold;
   color: #333;
 }
 
 /* Success and Error Status Row Colors */
-.success-row {
+.successRow {
   background-color: #d4edda; /* Light Green */
   color: #155724; /* Dark Green Text */
 }
 
-.error-row {
+.errorRow {
   background-color: #f8d7da; /* Light Red */
   color: #721c24; /* Dark Red Text */
 }
 
-
-.loading-overlay {
+.loadingOverlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -166,44 +165,44 @@
 }
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
-  .input-panel input,
-  .input-panel select,
-  .button-group {
+  .inputPanel input,
+  .inputPanel select,
+  .buttonGroup {
     max-width: 100%;
   }
 
-  .input-panel .button-group {
+  .inputPanel .buttonGroup {
     flex-direction: column;
   }
 
-  .input-panel button {
+  .inputPanel button {
     margin-bottom: 10px; /* Add spacing between buttons */
   }
 
-  .status-panel {
+  .statusPanel {
     overflow-x: auto; /* Ensure horizontal scrolling works */
     white-space: nowrap; /* Prevent content wrapping in smaller screens */
   }
 
-  .status-panel table {
+  .statusPanel table {
     border-collapse: collapse; /* Remove gaps between table cells */
     margin-right: 0 !important; /*
   }
 
-  .status-panel th,
-  .status-panel td {
+  .statusPanel th,
+  .statusPanel td {
     font-size: 12px; /* Adjust font size for smaller screens */
     padding: 8px; /* Reduce padding for compact display */
     text-align: left; /* Align text to the left for better readability */
   }
 
   /* Add this to ensure the table aligns properly within its container */
-  .status-panel table,
-  .status-panel {
+  .statusPanel table,
+  .statusPanel {
     display: block; /* Allow block-level behavior for scrolling */
   }
   
-  .status-panel table {
+  .statusPanel table {
     min-width: 100%; /* Ensure table fills parent container */
   }
 }

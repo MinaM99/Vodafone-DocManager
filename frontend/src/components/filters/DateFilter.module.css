@@ -1,0 +1,47 @@
+.dateFilter {
+  display: flex; /* Use flexbox for layout */
+  flex-direction: column; /* Stack elements vertically */
+  align-items: center; /* Center align items horizontally */
+  gap: 20px; /* Space between elements */
+  max-width: 400px; /* Set a max width for the filter */
+  margin: 0 auto; /* Center the container on the page */
+}
+
+.inputGroup {
+  display: flex; /* Use flexbox for input group */
+  flex-direction: column; /* Stack label and input vertically */
+  align-items: center; /* Center align items horizontally */
+  width: 100%; /* Make input group take full width */
+}
+
+.dateInputs {
+  display: flex; /* Use flexbox to arrange date inputs horizontally */
+  gap: 10px; /* Space between date inputs */
+  width: 100%; /* Make date inputs container take full width */
+}
+
+label {
+  font-weight: bold; /* Make labels bold */
+  margin-bottom: 5px; /* Space between label and input */
+}
+
+
+.filterButton {
+  width: 180px; /* Set button width to full */
+  padding: 10px; /* Add padding for better button size */
+  background-color: #E60000; /* Vodafone red color */
+  color: white; /* White text color */
+  border: none; /* Remove default border */
+  border-radius: 8px; /* Curved edges */
+  font-size: 16px; /* Increase font size */
+  cursor: pointer; /* Change cursor to pointer */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.filterButton:hover {
+  background-color: #C70000; /* Darker red on hover */
+}
+
+.inputError {
+  border: 2px solid red; /* Red border for error state */
+}

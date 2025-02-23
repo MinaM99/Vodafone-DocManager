@@ -1,4 +1,4 @@
-.statistics-container {
+.statisticsContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -9,7 +9,7 @@
 }
 
 /* Ensure the header is visible */
-.statistics-container h1 {
+.statisticsContainer h1 {
     margin: 0;
     padding: 0;
 }
@@ -34,13 +34,13 @@
     overflow: visible; /* Ensure no cropping occurs */
 }
 
-.chart-left {
+.chartLeft {
     flex: 0.3; /* Left chart (BarChart) takes 30% of the width */
     min-width: 200px; /* Ensure it doesn't shrink too much */
     max-width: 400px; /* Optional: limit maximum width */
 }
 
-.chart-right {
+.chartRight {
     flex: 0.7; /* Right chart (PieChart) takes 70% of the width */
     min-width: 300px; /* Ensure it doesn't shrink too much */
     max-width: 800px; /* Optional: limit maximum width */
@@ -54,7 +54,7 @@
 }
 
 /* Ensure Date Filter spans full width */
-.date-filter {
+.dateFilter {
     margin-bottom: 20px;
     width: 100%; /* Ensure it spans the full width */
     display: flex;
@@ -63,7 +63,7 @@
 }
 
 /* No Data Indicator styling */
-.no-data-indicator {
+.noDataIndicator {
     margin: 20px;
     padding: 10px;
     background-color: #f8d7da; /* Light red background */
@@ -84,20 +84,20 @@
         gap: 20px; /* Space between stacked charts */
     }
 
-    .chart-left,
-    .chart-right {
+    .chartLeft,
+    .chartRight {
         width: 90%; /* Make each chart take 90% of the available width on small screens */
         height: 250px; /* Adjust height to prevent overflow */
     }
 
-    .date-filter {
+    .dateFilter {
         width: 90%; /* Ensure the filter takes 90% of the width */
         text-align: center; /* Center the filter */
         margin-top: 20px; /* Add space between filter and charts */
     }
 
     /* Ensure content is centered in the viewport */
-    .statistics-container {
+    .statisticsContainer {
         justify-content: center; /* Center the container content */
         height: auto; /* Allow the container to auto-adjust height */
         padding: 0 10px; /* Add some padding to avoid content touching the edges */

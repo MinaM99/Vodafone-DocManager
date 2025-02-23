@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'; // Import the default styles
 import { format } from 'date-fns';
-import './DateFilter.css'; // Import the CSS file
+import classes from './DateFilter.module.css'; // Import the CSS module
 import CustomModal from '../modal/CustomModal'; // Import the CustomModal component
 
 const DateFilter = ({ onDateRangeChange }) => {
@@ -59,9 +59,9 @@ const DateFilter = ({ onDateRangeChange }) => {
   };
 
   return (
-    <div className="date-filter">
-      <div className="date-inputs">
-        <div className="input-group">
+    <div className={classes.dateFilter}>
+      <div className={classes.dateInputs}>
+        <div className={classes.inputGroup}>
           <label htmlFor="start-date">Start Date:</label>
           <DatePicker
             selected={startDate}
@@ -69,10 +69,10 @@ const DateFilter = ({ onDateRangeChange }) => {
             dateFormat="dd-MM-yyyy"
             maxDate={today}
             onKeyDown={handleKeyDown}
-            className={error ? 'error' : ''}
+            className={error ? classes.inputError : ''}
           />
         </div>
-        <div className="input-group">
+        <div className={classes.inputGroup}>
           <label htmlFor="end-date">End Date:</label>
           <DatePicker
             selected={endDate}
@@ -81,11 +81,11 @@ const DateFilter = ({ onDateRangeChange }) => {
             minDate={startDate}
             maxDate={today}
             onKeyDown={handleKeyDown}
-            className={error ? 'error' : ''}
+            className={error ? classes.inputError : ''}
           />
         </div>
       </div>
-      <button className="filter-button" onClick={handleFilterClick}>Filter</button>
+      <button className={classes.filterButton} onClick={handleFilterClick}>Filter</button>
       <CustomModal show={showModal} onClose={handleCloseModal} message={modalMessage} />
     </div>
   );

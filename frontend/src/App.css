@@ -19,3 +19,22 @@ body {
   align-items: center;
   justify-content: center;
 }
+
+
+.react-datepicker-wrapper {
+  width: 100%; /* Make date picker inputs take full width */
+}
+.react-datepicker__input-container input {
+  padding: 10px; /* Add padding for better spacing */
+  border: 2px solid #000000; /* Vodafone red border */
+  border-radius: 8px; /* Curved edges */
+  font-size: 16px; /* Increase font size */
+  outline: none; /* Remove default outline */
+  transition: border-color 0.3s; /* Smooth transition for border color */
+  width: 100%; /* Ensure input takes full width of wrapper */
+}
+
+.react-datepicker__input-container input:focus {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+  border-color: black;
+}

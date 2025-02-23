@@ -22,16 +22,16 @@ body {
   left: 0; /* Ensure it starts from the left */
 }
 
-.navbar-left {
+.navbarLeft {
   display: flex;
   align-items: center;
 }
 
-.vodafone-logo {
+.vodafoneLogo {
   height: 40px;
 }
 
-.navbar-center {
+.navbarCenter {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -39,7 +39,7 @@ body {
   align-items: center;
 }
 
-.nav-item {
+.navItem {
   margin: 0 10px;
   padding: 10px 20px;
   background-color: transparent;
@@ -50,18 +50,18 @@ body {
   transition: color 0.3s, border-bottom 0.3s; /* Smooth transition for hover effect */
 }
 
-.nav-item.active {
+.navItem.active {
   font-weight: bold;
   border-bottom: 2px solid #E60000; /* Red color for active tab */
   color: #E60000; /* Red color for active tab */
 }
 
-.nav-item:hover {
+.navItem:hover {
   color: #E60000; /* Red color on hover */
   border-bottom: 2px solid #E60000; /* Red color on hover */
 }
 
-.navbar-right {
+.navbarRight {
   display: flex;
   align-items: center;
 }
@@ -72,13 +72,13 @@ body {
   color: #000;
 }
 
-.user-icon {
+.userIcon {
   width: 40px;
   height: 40px;
   cursor: pointer;
 }
 
-.logout-popup {
+.logoutPopup {
   position: absolute;
   top: 50px; /* Adjust this value to position the popup below the user icon */
   right: 10px; /* Align the popup with the right side of the navbar */
@@ -94,14 +94,14 @@ body {
   gap: 10px; /* Space between buttons */
 }
 
-.logout-popup-content {
+.logoutPopupContent {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.confirm-logout-button,
-.cancel-logout-button {
+.confirmLogoutButton,
+.cancelLogoutButton {
   margin: 10px;
   padding: 10px 20px;
   border: none;
@@ -109,23 +109,23 @@ body {
   font-size: 16px;
 }
 
-.confirm-logout-button {
+.confirmLogoutButton {
   background-color: #f00;
   color: #fff;
 }
 
-.cancel-logout-button {
+.cancelLogoutButton {
   background-color: #ddd;
   color: #000;
 }
 
-.logout-popup p {
+.logoutPopup p {
   margin: 10px 0; /* Add space above and below the text */
   font-size: 16px; /* Increase font size for better readability */
   line-height: 1.5; /* Relaxed line height for better spacing */
 }
 
-.logout-popup button {
+.logoutPopup button {
   width: 100%; /* Make buttons stretch to full width */
   padding: 10px; /* Add padding for better button size */
   border: none; /* Remove default border */
@@ -134,40 +134,40 @@ body {
   transition: background-color 0.3s; /* Smooth transition for hover effect */
 }
 
-.logout-popup .logout-yes-button {
+.logoutPopup .logoutYesButton {
   background-color: #E60000; /* Vodafone red color */
   color: white; /* White text color */
 }
 
-.logout-popup .logout-yes-button:hover {
+.logoutPopup .logoutYesButton:hover {
   background-color: #C70000; /* Darker red on hover */
 }
 
-.logout-popup .logout-no-button {
+.logoutPopup .logoutNoButton {
   background-color: #f0f0f0; /* Light gray for the "No" button */
   color: black; /* Black text color */
 }
 
-.logout-popup .logout-no-button:hover {
+.logoutPopup .logoutNoButton:hover {
   background-color: #e0e0e0; /* Darker gray on hover */
 }
 
 /* Media Queries: */
 @media screen and (max-width: 768px) {
-  .vodafone-link-text {
+  .vodafoneLinkText {
     display: none; /* Hide the Vodafone title */
   }
 
-  .vodafone-icon {
+  .vodafoneIcon {
     width: 40px; /* Slightly smaller logo for smaller screens */
   }
 
-  .navbar-center {
+  .navbarCenter {
     position: static;
     transform: none;
   }
 
-  .logout-container {
+  .logoutContainer {
     position: absolute; /* Ensure logout stays on the right */
     right: 20px; /* Right side positioning */
   }

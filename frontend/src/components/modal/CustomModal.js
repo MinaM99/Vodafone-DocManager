@@ -1,5 +1,5 @@
 import React from 'react';
-import './CustomModal.css'; // Import the CSS file for modal styling
+import classes from './CustomModal.module.css'; // Import the CSS module
 
 const CustomModal = ({ show, onClose, message }) => {
   if (!show) {
@@ -7,10 +7,10 @@ const CustomModal = ({ show, onClose, message }) => {
   }
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
+    <div className={classes.modalOverlay}>
+      <div className={classes.modalContent}>
         <p>{message}</p>
-        <button onClick={onClose}>Close</button>
+        <button onClick={onClose} className={classes.closeButton}>Close</button>
       </div>
     </div>
   );

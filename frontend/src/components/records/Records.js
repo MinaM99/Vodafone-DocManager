@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./Records.css"; // Ensure this file includes the styles above
+import classes from "./Records.module.css"; // Import the CSS module
 import config from "./../../data/config.json";
 
 const Records = ({ username }) => {
@@ -160,12 +160,12 @@ const Records = ({ username }) => {
 
       if (response.ok) {
         // Success case (HTTP 200)
-        statusClass = "success-row";
+        statusClass = classes.successRow;
         status = "Succeeded";
         description = data.Succeeded || "Archived successfully.";
       } else {
         // Error case (e.g., HTTP 404)
-        statusClass = "error-row";
+        statusClass = classes.errorRow;
         status = "Failed";
         description = data.Error || data.message || "An error occurred.";
       }
@@ -192,7 +192,7 @@ const Records = ({ username }) => {
         documentType: documentType,
         status: "Error",
         description: "Network error or unexpected issue occurred.",
-        statusClass: "error-row",
+        statusClass: classes.errorRow,
       };
       setStatusData((prevStatusData) => [...prevStatusData, newStatus]);
       setErrorMessage(""); // Clear error message on successful submission
@@ -212,10 +212,10 @@ const Records = ({ username }) => {
   };
 
   return (
-    <div className="records-container">
-      <div className="records-content">
+    <div className={classes.recordsContainer}>
+      <div className={classes.recordsContent}>
         {/* Form for Box Number, Document Type, and MSISDN */}
-        <div className="input-panel">
+        <div className={classes.inputPanel}>
           <div>
             <label htmlFor="boxNumber">
               Box Number: <span style={{ color: "red" }}>*</span>
@@ -228,7 +228,7 @@ const Records = ({ username }) => {
                 setBoxNumber(e.target.value);
                 setErrors((prevErrors) => ({ ...prevErrors, boxNumber: "" }));
               }}
-              className={errors.boxNumber ? "input-error" : ""}
+              className={errors.boxNumber ? classes.inputError : ""}
               disabled={loading} // Disable input when loading
             />
           </div>
@@ -243,7 +243,7 @@ const Records = ({ username }) => {
                 setDocumentType(e.target.value);
                 setErrors((prevErrors) => ({ ...prevErrors, documentType: "" }));
               }}
-              className={errors.documentType ? "input-error" : ""}
+              className={errors.documentType ? classes.inputError : ""}
               disabled={loading} // Disable input when loading
             >
               <option value="">Select a document type</option>
@@ -266,19 +266,19 @@ const Records = ({ username }) => {
                 setMsisdn(e.target.value);
                 setErrors((prevErrors) => ({ ...prevErrors, msisdn: "" }));
               }}
-              className={errors.msisdn ? "input-error" : ""}
+              className={errors.msisdn ? classes.inputError : ""}
               disabled={loading} // Disable input when loading
             />
           </div>
           {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-          <div className="button-group">
+          <div className={classes.buttonGroup}>
             <button onClick={handleSubmit} disabled={loading}>Submit</button>
-            <button className="reset-button" onClick={handleReset} disabled={loading}>Reset</button>
+            <button className={classes.resetButton} onClick={handleReset} disabled={loading}>Reset</button>
           </div>
         </div>
 
         {/* Status Panel */}
-        <div className="status-panel">
+        <div className={classes.statusPanel}>
           <h3>Status Information</h3>
           {statusData.length > 0 ? (
             <table>
@@ -309,8 +309,8 @@ const Records = ({ username }) => {
         </div>
       </div>
       {loading && (
-        <div className="loading-overlay">
-          <div className="spinner"></div>
+        <div className={classes.loadingOverlay}>
+          <div className={classes.spinner}></div>
         </div>
       )} {/* Loading spinner */}
     </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./Statistics.css";
+import classes from "./Statistics.module.css";
 import DateFilter from "./../filters/DateFilter";
 import PieChart from "./../charts/PieChart";
 import BarChart from "./../charts/BarChart";
@@ -52,43 +52,6 @@ const Statistics = ({ username, userGroup }) => {
       console.error("Error fetching API data:", error);
       setNoDataFound(true);  // Handle error if fetching data fails
     }
-   
-
-   // Hardcoded data for testing
-   /*  
-    const hardcodedData = [
-      { dateOfDay: "01-01-2023", uploaded_documents: 10, failed_documents: 2 },
-      { dateOfDay: "02-01-2023", uploaded_documents: 15, failed_documents: 1 },
-      { dateOfDay: "03-01-2023", uploaded_documents: 8, failed_documents: 3 },
-      // Data for December 2024
-      { dateOfDay: "01-12-2024", uploaded_documents: 12, failed_documents: 1 },
-      { dateOfDay: "02-12-2024", uploaded_documents: 14, failed_documents: 2 },
-      { dateOfDay: "03-12-2024", uploaded_documents: 9, failed_documents: 3 },
-      { dateOfDay: "04-12-2024", uploaded_documents: 11, failed_documents: 1 },
-      { dateOfDay: "05-12-2024", uploaded_documents: 13, failed_documents: 2 },
-      // Data for November 2024
-      { dateOfDay: "01-11-2024", uploaded_documents: 10, failed_documents: 2 },
-      { dateOfDay: "02-11-2024", uploaded_documents: 15, failed_documents: 1 },
-      { dateOfDay: "03-11-2024", uploaded_documents: 8, failed_documents: 3 },
-      { dateOfDay: "04-11-2024", uploaded_documents: 12, failed_documents: 1 },
-      { dateOfDay: "05-11-2024", uploaded_documents: 14, failed_documents: 2 },
-      // Data for January 2025
-      { dateOfDay: "01-01-2025", uploaded_documents: 16, failed_documents: 2 },
-      { dateOfDay: "02-01-2025", uploaded_documents: 18, failed_documents: 1 },
-      { dateOfDay: "03-01-2025", uploaded_documents: 20, failed_documents: 3 },
-      { dateOfDay: "04-01-2025", uploaded_documents: 22, failed_documents: 1 },
-      { dateOfDay: "05-01-2025", uploaded_documents: 24, failed_documents: 2 },
-      // Data for February 2025
-      { dateOfDay: "01-02-2025", uploaded_documents: 26, failed_documents: 2 },
-      { dateOfDay: "02-02-2025", uploaded_documents: 28, failed_documents: 1 },
-      { dateOfDay: "03-02-2025", uploaded_documents: 30, failed_documents: 3 },
-      { dateOfDay: "04-02-2025", uploaded_documents: 32, failed_documents: 1 },
-      { dateOfDay: "05-02-2025", uploaded_documents: 34, failed_documents: 2 },
-    ];
-
-    setFilteredData(hardcodedData);  // Store hardcoded data
-    setNoDataFound(hardcodedData.length === 0);  // Set noDataFound if no data exists
-    //  */
   };
 
   // Handle date range change (triggered by the DateFilter component)
@@ -103,29 +66,27 @@ const Statistics = ({ username, userGroup }) => {
   }, []);  // Empty dependency array to run this only once on mount
 
   return (
-    <div className="statistics-container">
+    <div className={classes.statisticsContainer}>
       <h1>Document Statistics</h1>
       <p>Welcome, {username}! View statistics for uploaded and failed documents below.</p>
       <DateFilter onDateRangeChange={handleDateRangeChange} />  {/* Date range filter component */}
       {noDataFound ? (
-        <div className="no-data-indicator">
+        <div className={classes.noDataIndicator}>
           <p>No data found for the selected date range.</p>
         </div>
       ) : (
-        <div className="charts">
+        <div className={classes.charts}>
           {filteredData.length > 0 ? (
             <>
-            <div className="chart chart-left">
+              <div className={`${classes.chart} ${classes.chartLeft}`}>
                 <PieChart data={filteredData} />
-            </div>
-            <div className="chart chart-right">
+              </div>
+              <div className={`${classes.chart} ${classes.chartRight}`}>
                 <BarChart data={filteredData} />
-            </div>
-            
+              </div>
             </>
-     
           ) : (
-            <div className="no-data-indicator">
+            <div className={classes.noDataIndicator}>
               <p>No filtered data available.</p>
             </div>
           )}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './LoginPage.css';
+import classes from './LoginPage.module.css';
 import config from './../../data/config.json';
 
 const LoginPage = ({ onLogin }) => {
@@ -167,10 +167,10 @@ const LoginPage = ({ onLogin }) => {
   };
 
   return (
-    <div className="login-page">
-      <h1 className="login-title">Vodafone Documentum DocManager</h1>
-      <form onSubmit={handleLogin} className="login-form">
-        <div className="input-group">
+    <div className={classes.loginPage}>
+      <h1 className={classes.loginTitle}>Vodafone Documentum DocManager</h1>
+      <form onSubmit={handleLogin} className={classes.loginForm}>
+        <div className={classes.inputGroup}>
           <label htmlFor="username">Username</label>
           <input
             type="text"
@@ -181,7 +181,7 @@ const LoginPage = ({ onLogin }) => {
             disabled // Disable input for user input
           />
         </div>
-        <div className="input-group">
+        <div className={classes.inputGroup}>
           <label htmlFor="password">Password</label>
           <input
             type="password"
@@ -192,15 +192,15 @@ const LoginPage = ({ onLogin }) => {
             disabled={isLoading} // Disable input while loading
           />
         </div>
-        {error && <p className="error-message">{error}</p>}  {/* Display error message */}
+        {error && <p className={classes.errorMessage}>{error}</p>}  {/* Display error message */}
 
         {isLoading ? (
-          <div className="loading-spinner">
-            <div className="spinner"></div> {/* Add a loading spinner */}
+          <div className={classes.loadingSpinner}>
+            <div className={classes.spinner}></div> {/* Add a loading spinner */}
             <p>Logging in...</p>
           </div>
         ) : (
-          <button type="submit" className="login-button">Login</button>
+          <button type="submit" className={classes.loginButton}>Login</button>
         )}
       </form>
     </div>
