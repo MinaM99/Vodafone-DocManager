@@ -12,6 +12,9 @@ const app = express();
 // Enable CORS for all routes
 app.use(cors());
 
+// Middleware to parse JSON bodies
+app.use(express.json());
+
 // Decryption function
 async function decryptPassword(encryptedPassword) {
   const combined = Buffer.from(encryptedPassword, 'base64');
@@ -24,6 +27,7 @@ async function decryptPassword(encryptedPassword) {
   return decrypted.toString();
 }
 
+// Endpoint to get Windows username
 app.get('/get-windowsusername', async (req, res) => {
   const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 
@@ -62,28 +66,57 @@ app.get('/get-windowsusername', async (req, res) => {
 
       const windowsUsername = result.rows.length ? result.rows[0][0] : 'INVALID';
 
-      // If Windows Username is valid, delete the record
-      if (windowsUsername !== 'INVALID') {
-        await connection.execute(
-          `DELETE FROM AUDITMACHINEDETAILS WHERE WINDOWSUSERNAME = :windowsUsername`,
-          { windowsUsername }
-        );
-        console.log(`Deleted record for WINDOWSUSERNAME: ${windowsUsername}`);
-      }
-
       res.json({
         ip: ip,
         hostname: hostname,
         windowsUsername: windowsUsername,
       });
 
-      await connection.commit(); // Commit the delete transaction
       await connection.close();
     } catch (error) {
       console.error('Database error:', error);
       res.status(500).json({ error: 'Database error' });
     }
   });
+});
+
+// Endpoint to delete Windows username
+app.post('/delete-windowsusername', async (req, res) => {
+  const { windowsUsername } = req.body;
+
+  if (!windowsUsername) {
+    return res.status(400).json({ error: 'windowsUsername is required' });
+  }
+
+  try {
+    const encryptedPassword = process.env.DB_PASSWORD;
+    if (!encryptedPassword) {
+      throw new Error('DB_PASSWORD environment variable is not set');
+    }
+
+    const decryptedPassword = await decryptPassword(encryptedPassword);
+
+    const connection = await oracledb.getConnection({
+      user: process.env.DB_USER,
+      password: decryptedPassword,
+      connectString: `//${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`
+    });
+
+    // Delete the record for the given Windows username
+    await connection.execute(
+      `DELETE FROM AUDITMACHINEDETAILS WHERE WINDOWSUSERNAME = :windowsUsername`,
+      { windowsUsername }
+    );
+
+    await connection.commit(); // Commit the delete transaction
+    await connection.close();
+
+    console.log(`Deleted record for WINDOWSUSERNAME: ${windowsUsername}`);
+    res.json({ message: `Deleted record for WINDOWSUSERNAME: ${windowsUsername}` });
+  } catch (error) {
+    console.error('Database error:', error);
+    res.status(500).json({ error: 'Database error' });
+  }
 });
 
 const BACKEND_PORT = process.env.BACKEND_PORT || 5000;

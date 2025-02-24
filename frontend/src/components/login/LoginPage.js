@@ -142,13 +142,13 @@ const LoginPage = ({ onLogin }) => {
         
         if (isStatsUser && isRecordsUser) {
           // User is part of both groups
-          onLogin(token, 'both', userName);
+          onLogin('both', userName, windowsusername);
         } else if (isStatsUser) {
           // User is part of vf_stats_users group
-          onLogin(token, 'vf_stats_users', userName);
+          onLogin('vf_stats_users', userName ,windowsusername);
         } else if (isRecordsUser) {
           // User is part of vf_records_users group
-          onLogin(token, 'vf_records_users', userName);
+          onLogin('vf_records_users', userName ,windowsusername);
         } else {
           // User is not part of any valid group
           setError('User group does not have access to this application.');

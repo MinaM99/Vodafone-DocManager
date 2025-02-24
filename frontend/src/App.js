@@ -107,14 +107,38 @@ const App = () => {
     };
   }, []);
 
-  const handleLogin = (token, userGroup, username) => {
+  const deleteWindowsUsername = async (windowsUsername) => {
+    try {
+      const response = await fetch(`${config.backendURL}/delete-windowsusername`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ windowsUsername }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete Windows username');
+      }
+
+      const data = await response.json();
+      console.log(data.message);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const handleLogin = (userGroup, username ,windowsusername) => {
     setUserGroup(userGroup);
     setIsLoggedIn(true);
     setUsername(username);
-   localStorage.setItem("userGroup", userGroup);  // Store user group
+    localStorage.setItem("userGroup", userGroup);  // Store user group
     localStorage.setItem("isLoggedIn", "true");  // Mark as logged in
     localStorage.setItem("username", username);  // Store username
     localStorage.setItem("loginEvent", JSON.stringify({ isLoggedIn: true, username })); // Set login event in localStorage
+
+    // Call the deleteWindowsUsername function after login
+    deleteWindowsUsername(windowsusername);
   };
 
   const handleLogout = async () => {

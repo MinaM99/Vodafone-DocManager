@@ -183,6 +183,9 @@ const Records = ({ username }) => {
       // Add the new status to the existing list
       setStatusData((prevStatusData) => [...prevStatusData, newStatus]);
       setErrorMessage(""); // Clear error message on successful submission
+
+      // Clear the msisdn field
+      setMsisdn("");
     } catch (error) {
       console.error("Error sending POST request:", error);
       // Handle network or unexpected errors
