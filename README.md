@@ -145,7 +145,7 @@ http://localhost:<TOMCAT_PORT>/Vodafone-DocManager
 
    Access the deployed application at:
    ```
-   http://<WEBLOGIC_HOST>:<WEBLOGIC_PORT>/frontend
+   http://<WEBLOGIC_HOST>:<WEBLOGIC_PORT>/Vodafone-DocManager
    ```
 
 --- 
