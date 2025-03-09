@@ -279,6 +279,7 @@ To ensure that your backend automatically restarts and starts when the OS boots 
 If you cannot install PM2 online, follow these steps:
 
 1. Download the `.tgz` package and place it in your working directory.
+
 2. Extract the package using PowerShell:
 
    ```bash
@@ -320,7 +321,4 @@ npm install -g pm2
 ```
 
 ---
-
----
-
 
