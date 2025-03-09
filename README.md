@@ -163,7 +163,9 @@ Before proceeding, ensure that **Node.js** is installed on your system. If it's 
 
 You can verify if Node.js is installed by running the following command:
 
+```bash
 node -v
+```
 
 This will display the version of Node.js installed. Make sure it is at least version **12.x** or higher to ensure compatibility with the backend.
 
@@ -171,7 +173,9 @@ This will display the version of Node.js installed. Make sure it is at least ver
 
 Once Node.js is installed, navigate to your backend directory and run the following command to install all required dependencies:
 
+```bash
 npm install
+```
 
 This will install all dependencies listed in package.json.
 
@@ -181,11 +185,15 @@ PM2 is a production process manager for Node.js applications. It will help in ke
 
 To install PM2 globally, use the following command:
 
+```bash
 npm install pm2 -g
+```
 
 Make sure PM2 is installed correctly by checking the version:
 
+```bash
 pm2 -v
+```
 
 If PM2 is installed correctly, this will display the version number.
 
@@ -193,7 +201,9 @@ If PM2 is installed correctly, this will display the version number.
 
 Once PM2 is installed, you can start the backend application by running:
 
+```bash
 pm2 start server.js --name vodafoneDocBackend
+```
 
 This will start your backend server. PM2 will now keep the server running and manage the process.
 
@@ -201,13 +211,17 @@ This will start your backend server. PM2 will now keep the server running and ma
 
 To check which applications are currently running under PM2, use:
 
+```bash
 pm2 list
+```
 
 This will display a list of all running applications along with their status.
 
 If you need to view the logs of the application, use:
 
+```bash
 pm2 logs
+```
 
 This will show the real-time logs of your backend application.
 
@@ -215,13 +229,27 @@ This will show the real-time logs of your backend application.
 
 To ensure that your backend server automatically restarts if the system reboots, follow these steps:
 
-pm2 startup
+#### On Windows:
 
-This will generate a command to set PM2 to start automatically when your server reboots.
+```bash
+pm2-service-install
+```
+
+Follow the prompts to complete the setup.
+
+#### On Linux:
+
+```bash
+pm2 startup systemd
+```
+
+This will generate a command. Run the generated command with **sudo** to enable auto-start.
 
 After this, save the current process list:
 
+```bash
 pm2 save
+```
 
 This command will ensure that your running applications (in this case, the backend) are restored after a reboot.
 
@@ -234,11 +262,15 @@ If you cannot install PM2 online, follow these steps:
 1. Download the `.tgz` package and place it in your working directory.
 2. Extract the package using PowerShell:
 
+   ```bash
    tar -xvzf pm2-x.x.x.tgz
+   ```
 
 3. Install PM2 from the extracted folder:
 
+   ```bash
    npm install -g ./package
+   ```
 
 ---
 
@@ -246,7 +278,9 @@ If you cannot install PM2 online, follow these steps:
 
 If PM2 is not installed globally, you can run it locally from `node_modules`:
 
+```bash
 node_modules\.bin\pm2 start server.js
+```
 
 ---
 
@@ -256,11 +290,15 @@ node_modules\.bin\pm2 start server.js
 
 If `pm2` is not recognized, try:
 
+```bash
 npx pm2 start server.js --name vodafoneDocBackend
+```
 
 or reinstall it:
 
+```bash
 npm install -g pm2
+```
 
 ---
 
