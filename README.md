@@ -227,33 +227,52 @@ This will show the real-time logs of your backend application.
 
 ### 6. Auto-Restart Backend on System Reboot
 
-To ensure that your backend server automatically restarts if the system reboots, follow these steps:
+To ensure that your backend automatically restarts and starts when the OS boots up, follow these steps:
 
 #### On Windows:
-
-```bash
-pm2-service-install
-```
-
-Follow the prompts to complete the setup.
+1. Install the PM2 Windows service:
+   ```bash
+   npm install -g pm2-windows-service
+   ```
+2. Set up PM2 as a Windows service:
+   ```bash
+   pm2-service-install
+   ```
+   Follow the prompts to complete the setup. This will run PM2 as a Windows service and ensure your backend starts on reboot.
+3. Start your backend application with PM2:
+   ```bash
+   pm2 start server.js --name vodafoneDocBackend
+   ```
+4. Save the PM2 process list:
+   ```bash
+   pm2 save
+   ```
+5. Verify the setup by restarting your system and running:
+   ```bash
+   pm2 list
+   ```
 
 #### On Linux:
-
-```bash
-pm2 startup systemd
-```
-
-This will generate a command. Run the generated command with **sudo** to enable auto-start.
-
-After this, save the current process list:
-
-```bash
-pm2 save
-```
-
-This command will ensure that your running applications (in this case, the backend) are restored after a reboot.
-
----
+1. Start your backend with PM2:
+   ```bash
+   pm2 start server.js --name vodafoneDocBackend
+   ```
+2. Generate the startup script:
+   ```bash
+   pm2 startup systemd
+   ```
+   **Note:** This command will output another command specific to your system. **Copy and run the generated command with `sudo`**, for example:
+   ```bash
+   sudo env PATH=$PATH:/usr/bin pm2 startup systemd -u <your-username> --hp /home/<your-username>
+   ```
+3. Save the PM2 process list:
+   ```bash
+   pm2 save
+   ```
+4. Verify the setup by restarting your system and checking if PM2 automatically starts the backend:
+   ```bash
+   pm2 list
+   ```
 
 ## Alternative PM2 Installation (If Online Installation Fails)
 
