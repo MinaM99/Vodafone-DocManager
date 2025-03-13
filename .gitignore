@@ -3,3 +3,4 @@
 /frontend/build
 backend/.env
 backend/.env
+ENV Variables.txt
