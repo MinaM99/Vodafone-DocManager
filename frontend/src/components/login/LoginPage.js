@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import classes from './LoginPage.module.css';
-import config from './../../data/config.json';
+import config from '../../data/config';
 
 const LoginPage = ({ onLogin }) => {
   const [windowsusername, setWindowsUsername] = useState('INVALID');

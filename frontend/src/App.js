@@ -10,7 +10,7 @@ import Statistics from "./components/statistics/Statistics";
 import Records from "./components/records/Records";
 import Navbar from "./components/navbar/Navbar";
 import "./App.css";
-import config from "./data/config.json";
+import config from "./data/config";
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);  // Track login state

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import classes from "./Records.module.css"; // Import the CSS module
-import config from "./../../data/config.json";
+import config from "../../data/config";
 
 const Records = ({ username }) => {
   // State for input fields

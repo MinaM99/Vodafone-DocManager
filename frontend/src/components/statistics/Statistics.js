@@ -3,7 +3,7 @@ import classes from "./Statistics.module.css";
 import DateFilter from "./../filters/DateFilter";
 import PieChart from "./../charts/PieChart";
 import BarChart from "./../charts/BarChart";
-import config from "../../data/config.json";
+import config from "../../data/config";
 
 const Statistics = ({ username, userGroup }) => {
   const [filteredData, setFilteredData] = useState([]);  // State for storing filtered data

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import classes from './Navbar.module.css';
-import config from './../../data/config.json';
+import config from '../../data/config';
 import VodafoneIcon from './../../assets/vodafone-icon.png';
 import UserIcon from './../../assets/user-icon.png'; // Import the user icon
 
