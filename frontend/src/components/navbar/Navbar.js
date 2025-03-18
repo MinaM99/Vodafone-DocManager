@@ -34,7 +34,9 @@ const Navbar = ({ username, userGroup, onLogout }) => {
         `${config.documentumUrl}/dctm-rest/repositories/${config.repositoryName}`,
         {
           method: "GET",
-          headers: { DCTMClientToken: clientToken },
+          headers: { DCTMClientToken: clientToken ,
+            'DOCUMENTUM-CUSTOM-UNAUTH-SCHEME': true, // This makes web browsers not recognize the scheme and so that no login dialog boxes are prompted
+          },
           //credentials: "include",
         }
       );

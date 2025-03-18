@@ -32,6 +32,7 @@ const Records = ({ username }) => {
           method: "POST", // Use POST method
           headers: {
             DCTMClientToken: clientToken, // Indicate that we're sending JSON
+            'DOCUMENTUM-CUSTOM-UNAUTH-SCHEME': true, // This makes web browsers not recognize the scheme and so that no login dialog boxes are prompted
           },
           //credentials: "include", // Include cookies with the request
           body: JSON.stringify(dqlQuery), // Pass the dql query in the body

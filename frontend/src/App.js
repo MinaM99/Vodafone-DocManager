@@ -42,7 +42,9 @@ const App = () => {
       try {
         const response = await fetch(currentUserURL, {
           method: "GET",
-          headers: { DCTMClientToken: clientToken },  // Pass token for authentication
+          headers: { DCTMClientToken: clientToken ,
+            'DOCUMENTUM-CUSTOM-UNAUTH-SCHEME': true, // This makes web browsers not recognize the scheme and so that no login dialog boxes are prompted
+          },  // Pass token for authentication
         });
 
         if (response.ok) {

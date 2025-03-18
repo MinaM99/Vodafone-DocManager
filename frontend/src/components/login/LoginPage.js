@@ -71,7 +71,7 @@ const LoginPage = ({ onLogin }) => {
         method: 'GET',
         headers: {
           'Authorization': `Basic ${btoa(`${windowsusername}:${password}`)}`, // Base64 encode credentials
-          'DOCUMENTUM-CUSTOM-UNAUTH-SCHEME': true, // Ensure string value
+          'DOCUMENTUM-CUSTOM-UNAUTH-SCHEME': true, // This makes web browsers not recognize the scheme and so that no login dialog boxes are prompted
         },
         //credentials: 'include', // Include cookies in the request
       });
@@ -103,6 +103,7 @@ const LoginPage = ({ onLogin }) => {
         method: 'GET',
         headers: {
           'DCTMClientToken': token, // Use the token here
+          'DOCUMENTUM-CUSTOM-UNAUTH-SCHEME': true,
         },
         //credentials: 'include',
       });
@@ -123,6 +124,7 @@ const LoginPage = ({ onLogin }) => {
         method: 'GET',
         headers: {
           'DCTMClientToken': token, // Use the token here
+          'DOCUMENTUM-CUSTOM-UNAUTH-SCHEME': true, // This makes web browsers not recognize the scheme and so that no login dialog boxes are prompted
         },
         //credentials: 'include',
       });
