@@ -2,6 +2,7 @@
 /backend/node_modules
 backend/.env
 /frontend/build
+/frontend/.env
 /frontend/node_modules
 ENV Variables.txt
 frontend/.env
