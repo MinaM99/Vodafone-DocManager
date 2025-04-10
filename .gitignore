@@ -1,6 +1,7 @@
-/frontend/node_modules
+/backend/nssm-2.24_2
 /backend/node_modules
+backend/.env
 /frontend/build
-backend/.env
-backend/.env
+/frontend/node_modules
 ENV Variables.txt
+
