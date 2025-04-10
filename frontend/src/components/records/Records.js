@@ -113,7 +113,7 @@ const Records = ({ username }) => {
 
     // Construct the request body
     const requestBody = {
-      customerId: msisdn,
+      mobileNo: msisdn,
       documentType: documentType,
       boxNumber: boxNumber,
       appUserName: username,
