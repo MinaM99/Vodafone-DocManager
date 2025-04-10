@@ -199,13 +199,13 @@ NSSM (Non-Sucking Service Manager) is a tool for running Node.js apps as Windows
      - **Path**: Select the `node.exe` location (typically `C:\Program Files
 odejs
 ode.exe`).
-     - **Arguments**: Add the path to your application's `server.js`, for example: `C:\path	o\yourpp\server.js`.
+     - **Arguments**: Add the path to your application's `server.js`, for example: `C:\path\to\your\app\server.js`.
      - **Startup directory**: Optional, set to your application's root folder.
 
 3. **Set up Logging**:
    - In the **I/O** tab of the NSSM configuration window, set the following:
-     - **Output (stdout)**: Choose a log file in your app directory, e.g., `C:\path	o\yourpp\logs\output.log`.
-     - **Error (stderr)**: Choose a log file for errors, e.g., `C:\path	o\yourpp\logs\error.log`.
+     - **Output (stdout)**: Choose a log file in your app directory, e.g., `C:\path\to\your\app\logs\output.log`.
+     - **Error (stderr)**: Choose a log file for errors, e.g., `C:\path\to\your\app\logs\error.log`.
    - This will ensure that both standard output and errors are logged to the specified files.
 
 4. **Install the Service**:
