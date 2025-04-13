@@ -13,11 +13,11 @@ const LoginPage = ({ onLogin }) => {
     let intervalId;
     // Run machine details logic first
     window.location.href = "MacDetails://";
-  
+
     const fetchWindowsUsername = async () => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000); // Set timeout to 5 seconds
-  
+
       try {
         const response = await fetch(`${config.backendURL}/get-windowsusername`, {
           method: 'GET',
@@ -26,13 +26,13 @@ const LoginPage = ({ onLogin }) => {
           },
           signal: controller.signal,
         });
-  
+
         clearTimeout(timeoutId); // Clear the timeout if the request completes in time
-  
+
         if (!response.ok) {
           throw new Error('Failed to fetch username');
         }
-  
+
         const data = await response.json();
         setWindowsUsername(data.windowsUsername);
         console.log('WindowsUsername:', data.windowsUsername);
@@ -49,14 +49,51 @@ const LoginPage = ({ onLogin }) => {
         setWindowsUsername('INVALID');
       }
     };
-  
+
     intervalId = setInterval(fetchWindowsUsername, 5000); // Run fetchWindowsUsername every 5 seconds
-  
+
     return () => clearInterval(intervalId); // Cleanup interval on component unmount
   }, []); // Empty dependency array means this runs only once when the component mounts
 
   const setCookie = (name, value) => {
     document.cookie = `${name}=${value}; path=/`;
+  };
+
+  const fetchAllUserGroups = async (token, userName) => {
+    const groups = [];
+    let nextPage = `${config.documentumUrl}/dctm-rest/repositories/${config.repositoryName}/groups?user-name=${userName}&items-per-page=100&page=1`;
+    let hasMorePages = true;
+
+    while (hasMorePages) {
+      const currentUserGroupResponse = await fetch(nextPage, {
+        method: 'GET',
+        headers: {
+          'DCTMClientToken': token, // Use the token here
+          'DOCUMENTUM-CUSTOM-UNAUTH-SCHEME': true, // Prevent login dialog boxes
+        },
+      });
+
+      if (!currentUserGroupResponse.ok) {
+        const errorText = await currentUserGroupResponse.text();
+        throw new Error(`Failed to fetch user groups: ${errorText}`);
+      }
+
+      const currentUserGroupData = await currentUserGroupResponse.json();
+      console.log('Fetched User Groups Page:', currentUserGroupData);
+
+      // Add the current page's entries to the groups array
+      groups.push(...currentUserGroupData.entries);
+
+      // Check if there is a next page in the links array
+      const nextLink = currentUserGroupData.links.find((link) => link.rel === 'next');
+      if (nextLink) {
+        nextPage = nextLink.href; // Use the href for the next page
+      } else {
+        hasMorePages = false; // No more pages
+      }
+    }
+
+    return groups;
   };
 
   const handleLogin = async (e) => {
@@ -71,41 +108,30 @@ const LoginPage = ({ onLogin }) => {
         method: 'GET',
         headers: {
           'Authorization': `Basic ${btoa(`${windowsusername}:${password}`)}`, // Base64 encode credentials
-          'DOCUMENTUM-CUSTOM-UNAUTH-SCHEME': true, // This makes web browsers not recognize the scheme and so that no login dialog boxes are prompted
+          'DOCUMENTUM-CUSTOM-UNAUTH-SCHEME': true, // Prevent login dialog boxes
         },
-        //credentials: 'include', // Include cookies in the request
       });
 
       if (!response.ok) {
-        // Handle HTTP errors
         const errorText = await response.text();
         throw new Error(`Login failed: ${errorText}`);
       }
 
-      console.log('Response Headers:');
-      response.headers.forEach((value, name) => {
-        console.log(`${name}: ${value}`);
-      });
-
-      // Assuming token is in response headers (replace with actual header key)
-      const token = response.headers.get('dctmclientToken'); // Example: Replace with your actual token header key
-
+      const token = response.headers.get('dctmclientToken');
       if (!token) {
         throw new Error('Token not found in response headers.');
       }
 
-      // Set the token as a session cookie
       setCookie('dctmclientToken', token);
 
-      // Now, fetch the current user using the token
+      // Fetch the current user
       const currentUserURL = `${config.documentumUrl}/dctm-rest/repositories/${config.repositoryName}/currentuser`;
       const currentUserResponse = await fetch(currentUserURL, {
         method: 'GET',
         headers: {
-          'DCTMClientToken': token, // Use the token here
+          'DCTMClientToken': token,
           'DOCUMENTUM-CUSTOM-UNAUTH-SCHEME': true,
         },
-        //credentials: 'include',
       });
 
       if (!currentUserResponse.ok) {
@@ -118,48 +144,28 @@ const LoginPage = ({ onLogin }) => {
 
       console.log('Current User:', currentUserData);
 
-      // Fetch user groups using the token
-      const currentUserGroupURL = `${config.documentumUrl}/dctm-rest/repositories/${config.repositoryName}/groups?user-name=${userName}`;
-      const currentUserGroupResponse = await fetch(currentUserGroupURL, {
-        method: 'GET',
-        headers: {
-          'DCTMClientToken': token, // Use the token here
-          'DOCUMENTUM-CUSTOM-UNAUTH-SCHEME': true, // This makes web browsers not recognize the scheme and so that no login dialog boxes are prompted
-        },
-        //credentials: 'include',
-      });
+      // Fetch all user groups (handle pagination)
+      const allGroups = await fetchAllUserGroups(token, userName);
 
-      if (!currentUserGroupResponse.ok) {
-        const errorText = await currentUserGroupResponse.text();
-        throw new Error(`Failed to fetch user groups: ${errorText}`);
-      }
+      console.log('All User Groups:', allGroups);
 
-      const currentUserGroupData = await currentUserGroupResponse.json();
-      console.log('User Groups:', currentUserGroupData);
-      
-      if (currentUserGroupData.entries && currentUserGroupData.entries.length > 0) {
-        // Check if the user is part of vf_stats_users or vf_records_users or both
-        const isStatsUser = currentUserGroupData.entries.some(entry => entry.title === 'vf_stats_users');
-        const isRecordsUser = currentUserGroupData.entries.some(entry => entry.title === 'vf_records_users');
-        
-        if (isStatsUser && isRecordsUser) {
-          // User is part of both groups
-          onLogin('both', userName, windowsusername);
-        } else if (isStatsUser) {
-          // User is part of vf_stats_users group
-          onLogin('vf_stats_users', userName ,windowsusername);
-        } else if (isRecordsUser) {
-          // User is part of vf_records_users group
-          onLogin('vf_records_users', userName ,windowsusername);
-        } else {
-          // User is not part of any valid group
-          setError('User group does not have access to this application.');
-        }
+      // Check if the user is part of vf_stats_users or vf_records_users or both
+      const isStatsUser = allGroups.some((entry) => entry.title === 'vf_stats_users');
+      const isRecordsUser = allGroups.some((entry) => entry.title === 'vf_records_users');
+
+      if (isStatsUser && isRecordsUser) {
+        // User is part of both groups
+        onLogin('both', userName, windowsusername);
+      } else if (isStatsUser) {
+        // User is part of vf_stats_users group
+        onLogin('vf_stats_users', userName, windowsusername);
+      } else if (isRecordsUser) {
+        // User is part of vf_records_users group
+        onLogin('vf_records_users', userName, windowsusername);
       } else {
-        // If there are no groups (entries is empty or undefined), show an error message
-        setError('User not authorized. Please contact the system administrator.');
+        // User is not part of any valid group
+        setError('User group does not have access to this application.');
       }
-
     } catch (err) {
       console.error('Login error:', err);
       setError('Invalid username or password. Please try again.');
@@ -194,7 +200,7 @@ const LoginPage = ({ onLogin }) => {
             disabled={isLoading} // Disable input while loading
           />
         </div>
-        {error && <p className={classes.errorMessage}>{error}</p>}  {/* Display error message */}
+        {error && <p className={classes.errorMessage}>{error}</p>} {/* Display error message */}
 
         {isLoading ? (
           <div className={classes.loadingSpinner}>
