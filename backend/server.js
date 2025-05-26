@@ -27,6 +27,34 @@ async function decryptPassword(encryptedPassword) {
   return decrypted.toString();
 }
 
+// Create a connection pool at the start of the application
+let pool;
+
+async function initializeConnectionPool() {
+  try {
+    const encryptedPassword = process.env.DB_PASSWORD;
+    if (!encryptedPassword) {
+      throw new Error('DB_PASSWORD environment variable is not set');
+    }
+
+    const decryptedPassword = await decryptPassword(encryptedPassword);
+
+    pool = await oracledb.createPool({
+      user: process.env.DB_USER,
+      password: decryptedPassword,
+      connectString: `//${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
+      poolMin: 5, // Minimum number of connections in the pool
+      poolMax: 20, // Maximum number of connections in the pool
+      poolIncrement: 1, // Number of connections to add when the pool is exhausted
+    });
+
+    console.log('Database connection pool initialized');
+  } catch (error) {
+    console.error('Error initializing connection pool:', error);
+    process.exit(1); // Exit the application if the pool cannot be created
+  }
+}
+
 // Endpoint to get Windows username
 app.get('/get-windowsusername', async (req, res) => {
   const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
@@ -42,18 +70,7 @@ app.get('/get-windowsusername', async (req, res) => {
     }
 
     try {
-      const encryptedPassword = process.env.DB_PASSWORD;
-      if (!encryptedPassword) {
-        throw new Error('DB_PASSWORD environment variable is not set');
-      }
-
-      const decryptedPassword = await decryptPassword(encryptedPassword);
-
-      const connection = await oracledb.getConnection({
-        user: process.env.DB_USER,
-        password: decryptedPassword,
-        connectString: `//${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`
-      });
+      const connection = await pool.getConnection(); // Get a connection from the pool
 
       // Query the database with both hostname and IP, fallback to IP if hostname is unavailable
       const result = await connection.execute(
@@ -72,7 +89,7 @@ app.get('/get-windowsusername', async (req, res) => {
         windowsUsername: windowsUsername,
       });
 
-      await connection.close();
+      await connection.close(); // Release the connection back to the pool
     } catch (error) {
       console.error('Database error:', error);
       res.status(500).json({ error: 'Database error' });
@@ -89,35 +106,27 @@ app.post('/delete-windowsusername', async (req, res) => {
   }
 
   try {
-    const encryptedPassword = process.env.DB_PASSWORD;
-    if (!encryptedPassword) {
-      throw new Error('DB_PASSWORD environment variable is not set');
-    }
-
-    const decryptedPassword = await decryptPassword(encryptedPassword);
-
-    const connection = await oracledb.getConnection({
-      user: process.env.DB_USER,
-      password: decryptedPassword,
-      connectString: `//${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`
-    });
-
     // Delete the record for the given Windows username
-    await connection.execute(
-      `DELETE FROM AUDITMACHINEDETAILS WHERE WINDOWSUSERNAME = :windowsUsername`,
-      { windowsUsername }
-    );
+    await pool.getConnection().then(async (connection) => {
+      await connection.execute(
+        `DELETE FROM AUDITMACHINEDETAILS WHERE WINDOWSUSERNAME = :windowsUsername`,
+        { windowsUsername }
+      );
 
-    await connection.commit(); // Commit the delete transaction
-    await connection.close();
+      await connection.commit(); // Commit the delete transaction
+      await connection.close();
 
-    console.log(`Deleted record for WINDOWSUSERNAME: ${windowsUsername}`);
-    res.json({ message: `Deleted record for WINDOWSUSERNAME: ${windowsUsername}` });
+      console.log(`Deleted record for WINDOWSUSERNAME: ${windowsUsername}`);
+      res.json({ message: `Deleted record for WINDOWSUSERNAME: ${windowsUsername}` });
+    });
   } catch (error) {
     console.error('Database error:', error);
     res.status(500).json({ error: 'Database error' });
   }
 });
+
+// Initialize the connection pool before starting the server
+initializeConnectionPool();
 
 const BACKEND_PORT = process.env.BACKEND_PORT || 5000;
 app.listen(BACKEND_PORT, '0.0.0.0', () => console.log(`Backend Server running on port ${BACKEND_PORT}`));
