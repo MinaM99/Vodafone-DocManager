@@ -184,9 +184,9 @@ const LoginPage = ({ onLogin }) => {
             type="text"
             id="username"
             value={windowsusername}
-            onChange={(e) => setWindowsUsername(e.target.value)}
+            //onChange={(e) => setWindowsUsername(e.target.value)}
             required
-            disabled // Disable input for user input
+            readOnly // Disable input for user input
           />
         </div>
         <div className={classes.inputGroup}>
